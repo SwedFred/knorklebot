@@ -13,6 +13,7 @@ let dkeywords = []
 let dprompts = []
 let dweights = []
 const sessionid = new Date(Date.now()).toISOString().split('T')[0] + '_' + between(10000,100000).toString()
+const extensions = ["jpg", "png", "avif", "webp", "jpeg"]
 
 function wait(ms) {
     return new Promise(resolve => setTimeout(resolve, ms))
@@ -261,13 +262,14 @@ suite(async function (env) {
                   img2.sendKeys(p2)
                  
                   //var inputbox = '//*[@id="app-mount"]/div[2]/div[1]/div[1]/div/div[2]/div/div/div/div/div[3]/div/main/form/div/div[2]/div[2]/div[2]/div/div/div/span[5]'
-                  var inputbox = '//*[@id="app-mount"]/div[2]/div[1]/div[1]/div/div[2]/div/div/div/div/div[3]/div/main/form/div/div[2]/div[2]/div[2]/div/div/div/span[5]'
+                  var inputbox = '//*[@id="app-mount"]/div[2]/div[1]/div[1]/div/div[2]/div/div/div/div/div[3]/div/main/form/div/div[2]/div[2]/div[2]/div/div/div/span[5]/span'
                   var box = await driver.wait(until.elementLocated(By.xpath(inputbox)))
                   box.click()
                   box.sendKeys("dimensions: " + settings.blendaspect)
-                  await wait(time)
+                  await wait(1000)
                   box.sendKeys(Key.ENTER);
                   text_input.sendKeys(Key.ENTER)
+                  await wait(time)
                 }
               }
               else
