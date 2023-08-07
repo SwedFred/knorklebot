@@ -73,7 +73,7 @@ suite(async function (env) {
             var btn = await driver.wait(until.elementLocated(By.xpath(savepass)))
             btn.click();
             await wait(5000)
-            //promptbox = '/html/body/div[2]/div[2]/div[2]/form/div/input[1]'
+
             prompt_box = '//*[@id="sb_form_q"]'
             create_button = '//*[@id="create_btn_c"]'
             var promptbox = await driver.wait(until.elementLocated(By.xpath(prompt_box)))
@@ -89,33 +89,47 @@ suite(async function (env) {
             for (var i = 0; i < prompts.length; i++)
             {
               try {
+                var img1 = null;
+                var img2 = null;
+                var img3 = null;
+                var img4 = null;
                 promptbox.sendKeys(prompts[i])
                 await wait(1000)
                 createbutton.click();
                 await wait(60000)
-                var img1 = await driver.wait(until.elementLocated(By.xpath(img_1)))
-                var img2 = await driver.wait(until.elementLocated(By.xpath(img_2)))
-                var img3 = await driver.wait(until.elementLocated(By.xpath(img_3)))
-                var img4 = await driver.wait(until.elementLocated(By.xpath(img_4)))
-                url1 = await img1.getAttribute('src')
-                url2 = await img2.getAttribute('src')
-                url3 = await img3.getAttribute('src')
-                url4 = await img4.getAttribute('src')
-                await download(url1, path.join(settings.bingpath, sessionid + '_' + i + '_1' + '.jpg'))
-                await download(url2, path.join(settings.bingpath, sessionid + '_' + i + '_2' + '.jpg'))
-                await download(url3, path.join(settings.bingpath, sessionid + '_' + i + '_3' + '.jpg'))
-                await download(url4, path.join(settings.bingpath, sessionid + '_' + i + '_4' + '.jpg'))
-
+                try {
+                  img1 = await driver.wait(until.elementLocated(By.xpath(img_1)), 5000)
+                } catch(err) {}
+                try {
+                  img2 = await driver.wait(until.elementLocated(By.xpath(img_2)), 5000)
+                } catch(err) {}
+                try {
+                  img3 = await driver.wait(until.elementLocated(By.xpath(img_3)), 5000)
+                } catch(err) {}
+                try {
+                  img4 = await driver.wait(until.elementLocated(By.xpath(img_4)), 5000)
+                } catch(err) {}
+                if (img1) {
+                  url1 = await img1.getAttribute('src')
+                  await download(url1, path.join(settings.bingpath, sessionid + '_' + i + '_1' + '.jpg'))
+                }
+                if (img2) {
+                  url2 = await img2.getAttribute('src')
+                  await download(url2, path.join(settings.bingpath, sessionid + '_' + i + '_2' + '.jpg'))
+                }
+                if (img3) {
+                  url3 = await img3.getAttribute('src')
+                  await download(url3, path.join(settings.bingpath, sessionid + '_' + i + '_3' + '.jpg'))
+                }
+                if (img4) {
+                  url4 = await img4.getAttribute('src')
+                  await download(url4, path.join(settings.bingpath, sessionid + '_' + i + '_4' + '.jpg'))
+                }
+                
                 // Clean up
                 promptbox = await driver.wait(until.elementLocated(By.xpath(prompt_box)))
                 createbutton = await driver.wait(until.elementLocated(By.xpath(create_button)))
                 promptbox.clear();
-                // try {
-                //   await driver.executeScript(elt => elt.select(), promptbox);
-                //   promptbox.sendKeys(Key.BACK_SPACE);
-                // } catch(no) {
-                //   console.log(no)
-                // }
                 await wait(5000)
               } catch(err) {
                 console.log("something errored")
