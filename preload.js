@@ -2,6 +2,10 @@ const { contextBridge, ipcRenderer } = require('electron')
 
 contextBridge.exposeInMainWorld('electronAPI', {
     startBot: () => ipcRenderer.send('start-bot'),
+    startBing: () => ipcRenderer.send('start-bing'),
+    setBingEmail: (val) => ipcRenderer.send('set-bing-email', val),
+    setBingPassword: (val) => ipcRenderer.send('set-bing-password', val),
+    setBingDownloadPath: (val) => ipcRenderer.send('set-bing-download-path', val),
     setMode: (val) =>  ipcRenderer.send('set-mode', val),
     setPassword: (val) => ipcRenderer.send('set-password', val),
     setUsername: (val) => ipcRenderer.send('set-username', val),

@@ -1,9 +1,11 @@
 const setBlendcontainer = document.getElementById('blendcontainer')
 const setPromptcontainer = document.getElementById('promptcontainer')
 const setDescribecontainer = document.getElementById('describecontainer')
+const setBingContainer = document.getElementById('bingcontainer')
 const setPromptMode = document.getElementById('prompt-choice')
 const setBlendMode = document.getElementById('blend-choice')
 const setDescribeMode = document.getElementById('describe-choice')
+const setBingMode = document.getElementById('bing-choice')
 const chaosValue2 = document.getElementById('chaos-value2')
 const stylizeValue2 = document.getElementById('stylize-value2')
 const totaltime = document.getElementById('totaltime')
@@ -25,11 +27,14 @@ const passcontainer = document.getElementById('passcontainer')
 const changepass = document.getElementById('changepass')
 const loginbutton = document.getElementById('loginbutton')
 const setLoadPrompts = document.getElementById('kek')
+const setLoadPrompts2 = document.getElementById('kek2')
 const setButton = document.getElementById('startbot-button')
+const setBingButton = document.getElementById('startbing-button')
 const helpbutton = document.getElementById('helpbtn')
 const imgweight = document.getElementById('imgweight')
 const version = document.getElementById('version')
 const gentext = document.getElementById('gen-textu')
+const bingpath = document.getElementById('bingpath')
 const saveGeneration = document.getElementById('save-generation')
 const savePermutation = document.getElementById('save-permutation')
 // Permutations
@@ -44,6 +49,9 @@ const descArtists = document.getElementById('desc-artists')
 const descPhrases = document.getElementById('desc-phrases')
 const descWeights = document.getElementById('desc-weights')
 const descInterval = document.getElementById('interval3')
+// 
+const prompts = document.getElementById('prompts')
+const bingprompts = document.getElementById('bing-prompts')
 
 descInterval.addEventListener('change', (e) => {
   window.electronAPI.setDescInterval(e.target.value)
@@ -88,6 +96,15 @@ loginbutton.addEventListener('click', () => {
 setLoadPrompts.addEventListener('click', () => {
   window.electronAPI.selectFile().then(result=>{ 
     prompts.innerHTML = result;
+    bingprompts.innerHTML = result;
+    linecount.innerHTML = result.split('\r\n').length;
+  })
+})
+
+setLoadPrompts2.addEventListener('click', () => {
+  window.electronAPI.selectFile().then(result=>{ 
+    prompts.innerHTML = result;
+    bingprompts.innerHTML = result;
     linecount.innerHTML = result.split('\r\n').length;
   })
 })
@@ -96,11 +113,32 @@ setButton.addEventListener('click', () => {
     window.electronAPI.startBot()
 })
 
-const prompts = document.getElementById('prompts')
+setBingButton.addEventListener('click', () => {
+  window.electronAPI.startBing();
+})
 
 const setUsername = document.getElementById('user')
 setUsername.addEventListener('change', (e) => {
   window.electronAPI.setUsername(e.target.value)
+})
+
+const setBingEmail = document.getElementById('user2')
+setBingEmail.addEventListener('change', (e) => {
+  window.electronAPI.setBingEmail(e.target.value)
+})
+
+const setBingDownloadPath = document.getElementById('bingfolder')
+setBingDownloadPath.addEventListener('click', (e) => {
+  window.electronAPI.selectFolder().then(result=>{ 
+    var split = result.split('\\');
+    bingpath.innerHTML = split[split.length -1];
+    window.electronAPI.setBingDownloadPath(result)
+  })
+})
+
+const setBingPassword = document.getElementById('password2')
+setBingPassword.addEventListener('change', (e) => {
+  window.electronAPI.setBingPassword(e.target.value)
 })
 
 const setPassword = document.getElementById('password')
@@ -123,6 +161,7 @@ setPromptMode.addEventListener('click', (e) => {
   setBlendcontainer.style.display = "none";
   setPromptcontainer.style.display = "flex";
   setDescribecontainer.style.display = "none";
+  setBingContainer.style.display = "none"
   window.electronAPI.setMode(1)
 })
 
@@ -130,14 +169,24 @@ setBlendMode.addEventListener('click', (e) => {
   setBlendcontainer.style.display = "flex";
   setPromptcontainer.style.display = "none";
   setDescribecontainer.style.display = "none";
+  setBingContainer.style.display = "none"
   window.electronAPI.setMode(2)
 })
 
 setDescribeMode.addEventListener('click', (e) => {    
   setBlendcontainer.style.display = "none";
   setPromptcontainer.style.display = "none";
+  setBingContainer.style.display = "none"
   setDescribecontainer.style.display = "flex";
   window.electronAPI.setMode(3)
+})
+
+setBingMode.addEventListener('click', (e) => {
+  setBlendcontainer.style.display = "none";
+  setPromptcontainer.style.display = "none";
+  setDescribecontainer.style.display = "none";
+  setBingContainer.style.display = "flex"
+  window.electronAPI.setMode(4)
 })
 
 imgweight.addEventListener('input', (e) => {
@@ -315,11 +364,14 @@ window.electronAPI.loadSettings((event, settings) => {
     setUsername.value = settings.username;
     setPassword.value = settings.password;
     setDiscordurl.value = settings.discordchaturl;
+    setBingEmail.value = settings.bingmail;
+    setBingPassword.value = settings.bingpass;
     setBlendnum.value = settings.blendnum;
     setLoops.value = settings.loops;
     setInterval.value = settings.interval;
     setInterval2.value = settings.interval;
     setImg1Source.value = settings.img1source;
+    bingpath.value = settings.bingpath;
     if (settings.img1source) {
       split = settings.img1source.split('\\');
       img1path.innerHTML = split[split.length -1];
@@ -368,6 +420,8 @@ window.electronAPI.loadSettings((event, settings) => {
     setBlendAspectRatio.value = settings.blendaspect;
     setAspectRatio.value = settings.aspect
     totaltime.innerHTML = ((settings.loops * settings.interval) / 60).toFixed(1);
+    prompts.innerHTML = settings.prompts;
+    bingprompts.innerHTML = settings.prompts;
     descPrompts.checked = settings.descriptions.saveprompts;
     descKeywords.checked = settings.descriptions.savekeywords;
     descPhrases.checked = settings.descriptions.savephrases;
@@ -381,27 +435,44 @@ window.electronAPI.loadSettings((event, settings) => {
       setBlendcontainer.style.display = "none";
       setPromptcontainer.style.display = "flex";
       setDescribecontainer.style.display = "none";
+      setBingContainer.style.display = "none"
       setPromptMode.checked = true;
       setBlendMode.checked = false;
       setDescribeMode.checked = false;
+      setBingMode.checked = false;
     }
     else if (settings.mode === 2) //blend
     {
       setBlendcontainer.style.display = "flex";
       setPromptcontainer.style.display = "none";
       setDescribecontainer.style.display = "none";
+      setBingContainer.style.display = "none"
       setPromptMode.checked = false;
       setBlendMode.checked = true;
       setDescribeMode.checked = false;
+      setBingMode.checked = false;
     }
     else if (settings.mode === 3) //describe
     {
       setBlendcontainer.style.display = "none";
       setPromptcontainer.style.display = "none";
       setDescribecontainer.style.display = "flex";
+      setBingContainer.style.display = "none"
       setPromptMode.checked = false;
       setBlendMode.checked = false;
       setDescribeMode.checked = true;
+      setBingMode.checked = false;
+    }
+    else if (settings.mode === 4) //Bing!
+    {
+      setBlendcontainer.style.display = "none";
+      setPromptcontainer.style.display = "none";
+      setDescribecontainer.style.display = "none";
+      setBingContainer.style.display = "flex"
+      setPromptMode.checked = false;
+      setBlendMode.checked = false;
+      setDescribeMode.checked = false;
+      setBingMode.checked = true;
     }
     settings.promptgen.files.forEach(f => {
       AddListItem(f);

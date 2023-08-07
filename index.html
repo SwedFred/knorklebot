@@ -38,6 +38,10 @@
               <input type="radio" name="mode" id="describe-choice" value="describe">
               <label for="describe-choice" class="reg-text">Describe mode</label>
             </div>
+            <div>
+              <input type="radio" name="mode" id="bing-choice" value="bing">
+              <label for="bing-choice" class="reg-text">Bing mode</label>
+            </div>
           </div>
           <div class="discord-wrapper">
             <div class="discord-container">
@@ -62,6 +66,35 @@
             </div>
         </div>
         
+        <!-- BING! -->
+        <div id="bingcontainer">
+            <p class="reg-text">This is a BETA-feature for generating and downloading images from Bing. As of now it uses the same prompts as in the MidJourney prompt generator, so make sure you have loaded some prompts there before starting the bing bot</p>
+            <textarea id="bing-prompts" class="promptbox" readonly></textarea>
+            <div class="promptbtncontainer">
+              <button id="kek2">Load Prompts</button>
+            </div>
+            <div class="bing-container">
+              <div class="container2">
+                <label class="reg-text halfkek" for="user2">Microsoft e-mail:</label>
+                <input class="inputbox" type="text" id="user2" placeholder="Microsoft e-mail">
+              </div>
+              <div class="container2">
+                <label class="reg-text" for="password2">Microsoft password:</label>
+                <input class="inputbox" type="password" id="password2" placeholder="Microsoft password">
+              </div>
+            </div>
+            <div class="much-box">
+              <label class="reg-text" for="bingfolder">Bing image download path:</label>
+              <div class="buttonbox">
+                <button class="folderbutton" id="bingfolder">Chose</button>
+                <p class="nm reg-text" id="bingpath"></p>
+              </div>
+            </div>
+            <div class="bingbutton-container">
+              <button id="startbing-button">BING!</button>
+            </div>
+        </div>
+
         <!-- Blendmode -->
         <div id="blendcontainer">
             <div class="reviewbox">

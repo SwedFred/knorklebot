@@ -13,6 +13,7 @@ const Mocha = require('mocha')
   let settings = null;
   let settingspath = path.join(__dirname, "settings.json")
   let testpath = path.join(__dirname, "testing.js")
+  let bingpath = path.join(__dirname, 'testingbing.js')
   let mocha;
   function createWindow()
   {
@@ -144,6 +145,9 @@ ipcMain.on('help', (event, arg) => {shell.openExternal("https://www.youtube.com/
 ipcMain.on('set-mode', (event, arg) => { settings.mode = arg; fs.writeFileSync(settingspath,JSON.stringify(settings));  })
 ipcMain.on('set-password', (event, arg) => { settings.password = arg; fs.writeFileSync(settingspath,JSON.stringify(settings));})
 ipcMain.on('set-username', (event, arg) => {settings.username = arg; fs.writeFileSync(settingspath,JSON.stringify(settings));})
+ipcMain.on('set-bing-email', (event, arg) => { settings.bingmail = arg; fs.writeFileSync(settingspath, JSON.stringify(settings))});
+ipcMain.on('set-bing-password', (event, arg) => { settings.bingpass = arg; fs.writeFileSync(settingspath, JSON.stringify(settings))});
+ipcMain.on('set-bing-download-path', (event,arg) => { settings.bingpath = arg; fs.writeFileSync(settingspath, JSON.stringify(settings))});
 ipcMain.on('set-stylize', (event, arg) => { settings.stylize = parseInt(arg); fs.writeFileSync(settingspath,JSON.stringify(settings));})
 ipcMain.on('set-chaos', (event, arg) => {settings.chaos = parseInt(arg); fs.writeFileSync(settingspath,JSON.stringify(settings));})
 ipcMain.on('set-version', (event, arg) => {settings.version = parseInt(arg); fs.writeFileSync(settingspath,JSON.stringify(settings));})
@@ -181,8 +185,15 @@ ipcMain.on('start-bot', (event, arg) => {
   mocha = new Mocha({});
   mocha.addFile(testpath);
   mocha.timeout(0);
-  mocha.run().on('test', () => {}).on('test end', () => {mocha.unloadFiles(); mocha.dispose();}).on('end', () => { mocha.unloadFiles(); mocha.dispose();}).on('fail', () => {mocha.unloadFiles(); mocha.dispose();})
+  mocha.run().on('test', () => {}).on('test end', () => {}).on('end', () => { mocha.unloadFiles(); mocha.dispose();}).on('fail', () => {mocha.unloadFiles(); mocha.dispose();})
 })
+ipcMain.on('start-bing', (event, arg) => {
+  // Find out why we need to click twice
+   mocha = new Mocha({});
+   mocha.addFile(bingpath);
+   mocha.timeout(0);
+   mocha.run().on('test', () => {}).on('test end', () => {}).on('end', () => { mocha.unloadFiles(); mocha.dispose();}).on('fail', () => {mocha.unloadFiles(); mocha.dispose();})
+ })
 ipcMain.on('login', (event, arg) => {
      win.webContents.send('loggedin', true);
  })
