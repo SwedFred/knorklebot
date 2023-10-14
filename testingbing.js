@@ -81,10 +81,10 @@ suite(async function (env) {
             var createbutton = await driver.wait(until.elementLocated(By.xpath(create_button)))
             await wait(500)
             var prompts = settings.prompts;
-            var img_1 = '/html/body/div[2]/div[1]/div[5]/div[1]/div[2]/div/div/ul[1]/li[1]/div/div/a/div/img'
-            var img_2 = '//html/body/div[2]/div[1]/div[5]/div[1]/div[2]/div/div/ul[1]/li[2]/div/div/a/div/img'
-            var img_3 = '/html/body/div[2]/div[1]/div[5]/div[1]/div[2]/div/div/ul[2]/li[1]/div/div/a/div/img'
-            var img_4 = '/html/body/div[2]/div[1]/div[5]/div[1]/div[2]/div/div/ul[2]/li[2]/div/div/a/div/img'
+            var img_1 = '/html/body/div[3]/div/div[5]/div[1]/div[2]/div/div/ul[1]/li[1]/div/div/a/div/img'
+            var img_2 = '/html/body/div[3]/div/div[5]/div[1]/div[2]/div/div/ul[1]/li[2]/div/div/a/div/img'
+            var img_3 = '/html/body/div[3]/div/div[5]/div[1]/div[2]/div/div/ul[2]/li[1]/div/div/a/div/img'
+            var img_4 = '/html/body/div[3]/div/div[5]/div[1]/div[2]/div/div/ul[2]/li[2]/div/div/a/div/img'
                
             for (var i = 0; i < prompts.length; i++)
             {
