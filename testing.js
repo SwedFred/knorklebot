@@ -234,7 +234,13 @@ suite(async function (env) {
             channelUrl = settings.discordchaturl
             await driver.wait(until.titleContains('Friend'))
             await driver.get(channelUrl)
-            text_input = await driver.wait(until.elementLocated(By.xpath('//*[@id="app-mount"]/div[2]/div/div[1]/div/div[2]/div/div[1]/div/div/div[3]/div[2]/main/form/div/div[1]/div/div[3]/div/div[2]')))
+            text_input = null;
+            console.log("truing to get textbox")
+            try {
+              //text_input = await driver.wait(until.elementLocated(By.xpath('//*[@id="app-mount"]/div[2]/div/div[1]/div/div[2]/div/div[1]/div/div/div[3]/div[2]/main/form/div/div[1]/div/div[3]/div/div[2]')))
+              text_input = await driver.wait(until.elementLocated(By.xpath('//*[@id="app-mount"]/div[2]/div[1]/div[1]/div/div[2]/div/div/div/div/div[3]/div[2]/div/div[1]/main/form/div/div[1]/div/div[3]/div/div[2]')))
+              
+            } catch(err) {console.log("cant get text input")}
             //let messagelist = await driver.wait(until.elementLocated(By.xpath(msglist)))
 
             var time = 0;
@@ -350,11 +356,13 @@ suite(async function (env) {
             }
             else if (settings.mode === 1) // Prompt mode
             {
+              console.log("hej")
                 //generate from prompt
                 var prompts = settings.prompts;
                
                 for (var i = 0; i < prompts.length; i++)
                 {
+                  try {
                     time = (settings.interval * 1000) + (Math.random() * 5000)
                     var command = '/imagine prompt: ';
 
@@ -385,6 +393,7 @@ suite(async function (env) {
                         await driver.wait(until.elementLocated(By.xpath('//*[@id="autocomplete-0"]/div/div/div[2]')))
                     text_input.sendKeys(Key.ENTER)
                     await wait(time)
+                  }catch(err) {console.log(err)}
                 };
             }
             else if (settings.mode === 3) // Describe

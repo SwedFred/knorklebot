@@ -81,11 +81,17 @@ suite(async function (env) {
             var createbutton = await driver.wait(until.elementLocated(By.xpath(create_button)))
             await wait(500)
             var prompts = settings.prompts;
+            var img_i = '/html/body/div[3]/div/div[5]/div[1]/div[2]/div/a/img'
+            var img_j = '/html/body/div[3]/div/div[5]/div[1]/div/div/a/img'
             var img_1 = '/html/body/div[3]/div/div[5]/div[1]/div[2]/div/div/ul[1]/li[1]/div/div/a/div/img'
             var img_2 = '/html/body/div[3]/div/div[5]/div[1]/div[2]/div/div/ul[1]/li[2]/div/div/a/div/img'
             var img_3 = '/html/body/div[3]/div/div[5]/div[1]/div[2]/div/div/ul[2]/li[1]/div/div/a/div/img'
             var img_4 = '/html/body/div[3]/div/div[5]/div[1]/div[2]/div/div/ul[2]/li[2]/div/div/a/div/img'
-               
+            var img_1_b = '/html/body/div[3]/div/div[5]/div[1]/div/div/div/ul[1]/li[1]/div/div/a/div/img'
+            var img_2_b = '/html/body/div[3]/div/div[5]/div[1]/div/div/div/ul[1]/li[2]/div/div/a/div/img'
+            var img_3_b = '/html/body/div[3]/div/div[5]/div[1]/div/div/div/ul[2]/li[1]/div/div/a/div/img'
+            var img_4_b = '/html/body/div[3]/div/div[5]/div[1]/div/div/div/ul[2]/li[2]/div/div/a/div/img'
+            
             for (var i = 0; i < prompts.length; i++)
             {
               try {
@@ -96,19 +102,44 @@ suite(async function (env) {
                 promptbox.sendKeys(prompts[i])
                 await wait(1000)
                 createbutton.click();
-                await wait(60000)
+                await wait(90000)
+                
                 try {
                   img1 = await driver.wait(until.elementLocated(By.xpath(img_1)), 5000)
-                } catch(err) {}
+                } catch(err) {
+                  try{
+                    img1 = await driver.wait(until.elementLocated(By.xpath(img_1_b)), 1000)
+                  } catch(err2) {
+                    try {
+                      img1 = await driver.wait(until.elementLocated(By.xpath(img_i)), 1000)
+                    } catch(err3) {
+                      try {
+                        img1 = await driver.wait(until.elementLocated(By.xpath(img_j)), 1000)
+                      } catch (err4) {}
+                    }
+                  }
+                }
                 try {
                   img2 = await driver.wait(until.elementLocated(By.xpath(img_2)), 5000)
-                } catch(err) {}
+                } catch(err) {
+                  try {
+                    img2 = await driver.wait(until.elementLocated(By.xpath(img_2_b)), 1000)
+                  } catch(err2){}
+                }
                 try {
                   img3 = await driver.wait(until.elementLocated(By.xpath(img_3)), 5000)
-                } catch(err) {}
+                } catch(err) {
+                  try {
+                    img3 = await driver.wait(until.elementLocated(By.xpath(img_3_b)), 1000)
+                  } catch(err2) {}
+                }
                 try {
                   img4 = await driver.wait(until.elementLocated(By.xpath(img_4)), 5000)
-                } catch(err) {}
+                } catch(err) {
+                  try {
+                    img4 = await driver.wait(until.elementLocated(By.xpath(img_4_b)), 1000)
+                  } catch(err2) {}
+                }
                 if (img1) {
                   url1 = await img1.getAttribute('src')
                   await download(url1, path.join(settings.bingpath, sessionid + '_' + i + '_1' + '.jpg'))
