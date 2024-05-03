@@ -1,491 +1,414 @@
-const setBlendcontainer = document.getElementById('blendcontainer')
-const setPromptcontainer = document.getElementById('promptcontainer')
-const setDescribecontainer = document.getElementById('describecontainer')
-const setBingContainer = document.getElementById('bingcontainer')
-const setPromptMode = document.getElementById('prompt-choice')
-const setBlendMode = document.getElementById('blend-choice')
-const setDescribeMode = document.getElementById('describe-choice')
-const setBingMode = document.getElementById('bing-choice')
-const chaosValue2 = document.getElementById('chaos-value2')
-const stylizeValue2 = document.getElementById('stylize-value2')
-const totaltime = document.getElementById('totaltime')
-const img1path = document.getElementById('img1path')
-const img2path = document.getElementById('img2path')
-const img3path = document.getElementById('img3path')
-const img4path = document.getElementById('img4path')
-const img5path = document.getElementById('img5path')
-const descfolder = document.getElementById('descfolder')
-const descpath = document.getElementById('descpath')
-const descsavepath = document.getElementById('descsavepath')
-const descsavefolder = document.getElementById('descsavefolder')
-const linecount = document.getElementById('linecount')
+// Bindings 
+// Loading Screen
 const loginwindow = document.getElementById('loginwindow')
-const mainpage = document.getElementById('mainpage')
-const errortext = document.getElementById('errortext')
-const override = document.getElementById('override') // override the stylize settings n stuff
-const passcontainer = document.getElementById('passcontainer')
-const changepass = document.getElementById('changepass')
 const loginbutton = document.getElementById('loginbutton')
-const setLoadPrompts = document.getElementById('kek')
-const setLoadPrompts2 = document.getElementById('kek2')
-const setButton = document.getElementById('startbot-button')
-const setBingButton = document.getElementById('startbing-button')
+
+// Main Window
+const mainWindow = document.getElementById('main-page')
+
+// Header
+const setMainMenuChoice1 = document.getElementById('mainmenu-choice1')
+const setMainMenuChoice2 = document.getElementById('mainmenu-choice2')
+const setMainMenuChoice3 = document.getElementById('mainmenu-choice3')
+const setMainMenuChoice4 = document.getElementById('mainmenu-choice4')
 const helpbutton = document.getElementById('helpbtn')
-const imgweight = document.getElementById('imgweight')
-const version = document.getElementById('version')
-const gentext = document.getElementById('gen-textu')
-const bingpath = document.getElementById('bingpath')
-const saveGeneration = document.getElementById('save-generation')
-const savePermutation = document.getElementById('save-permutation')
-// Permutations
-const permutetext = document.getElementById('permute-textu')
-const permuteAddbutton = document.getElementById('permuteaddbutton')
-const permuteFileList = document.getElementById('permutefilelist')
-const permutebutton = document.getElementById('permutebutton')
-// Descriptions
-const descPrompts = document.getElementById('desc-prompts')
-const descKeywords = document.getElementById('desc-keywords')
-const descArtists = document.getElementById('desc-artists')
-const descPhrases = document.getElementById('desc-phrases')
-const descWeights = document.getElementById('desc-weights')
-const descInterval = document.getElementById('interval3')
-// 
-const prompts = document.getElementById('prompts')
-const bingprompts = document.getElementById('bing-prompts')
 
-descInterval.addEventListener('change', (e) => {
-  window.electronAPI.setDescInterval(e.target.value)
-})
-descPrompts.addEventListener('click', (e) => {
-  var val = e.target.checked ? true : false;
-  window.electronAPI.setDescPrompts(val)
-})
-descKeywords.addEventListener('click', (e) => {
-  var val = e.target.checked ? true : false;
-  window.electronAPI.setDescKeywords(val)
-})
-descArtists.addEventListener('click', (e) => {
-  var val = e.target.checked ? true : false;
-  window.electronAPI.setDescArtists(val)
-})
-descPhrases.addEventListener('click', (e) => {
-  var val = e.target.checked ? true : false;
-  window.electronAPI.setDescPhrases(val)
-})
-descWeights.addEventListener('click', (e) => {
-  var val = e.target.checked ? true : false;
-  window.electronAPI.setDescWeights(val)
-})
-saveGeneration.addEventListener('click', (e) => {
-  var val = e.target.checked ? true : false;
-  window.electronAPI.setSaveGeneration(val)
-})
-savePermutation.addEventListener('click', (e) => {
-  var val = e.target.checked ? true : false;
-  window.electronAPI.setSavePermutation(val)
+// Prompt gen page
+const promptgenPage = document.getElementById('promptgen-page')
+const promptgenTab1 = document.getElementById('promptgen-tab-1')
+const promptgenTab2 = document.getElementById('promptgen-tab-2')
+const promptgenTab1Content = document.getElementById('promptgen-random-tab')
+const promptgenTab2Content = document.getElementById('promptgen-combination-tab')
+const promptgenPromptbox = document.getElementById('promptgen-promptbox')
+const promptgenFiles = document.getElementById('promptgen-filelist')
+const promptgenCombinationFiles = document.getElementById('promptgen-combination-filelist')
+const promptgenAddFileButton = document.getElementById('promptgen-addfile-button')
+const promptgenGenerateButton = document.getElementById('promptgen-generate-button')
+const promptgenOpenFileButton = document.getElementById('promptgen-openfile-button')
+const promptgenPromptCount = document.getElementById('promptgen-amountofprompts')
+const promptgenShouldSaveGenFile1 = document.getElementById('promptgen-shouldsavegenfile')
+const promptgenCombintationbox = document.getElementById('promptgen-combinationbox')
+const promptgenCombinationAddfileButton = document.getElementById('promptgen-combination-addfile')
+const promptgenCombinationGenerateButton = document.getElementById('promptgen-combination-generate-button')
+const promptgenCombinationOpenFileButton = document.getElementById('promptgen-combination-openfile-button')
+const promptgenShouldSaveGenFile2 = document.getElementById('promptgen-combination-shouldsavegenfile')
+
+// Bing page 
+const bingPage = document.getElementById('bing-page')
+const bingPromptbox = document.getElementById('bing-promptbox')
+const bingLoadpromptsButton = document.getElementById('bing-loadprompts-button')
+const bingWaittimeInput = document.getElementById('bing-waittime-input')
+const bingEmailInput = document.getElementById('bing-email-input')
+const bingPasswordInput = document.getElementById('bing-pass-input')
+const bingDownloadPathButton = document.getElementById('bing-downloadpath-button')
+const bingDownloadPathText = document.getElementById('bing-downloadpath-text')
+const bingStartButton = document.getElementById('bing-startbutton')
+
+// Midjourney page
+const midjourneyPage = document.getElementById('midjourney-page')
+const midjourneyPrompts = document.getElementById('midjourney-prompts')
+const midjourneyBlending = document.getElementById('midjourney-blending')
+const midjourneyDescriptions = document.getElementById('midjourney-descriptions')
+const midjourneySetup = document.getElementById('midjourney-setup')
+const midjourneyEmail = document.getElementById('midjourney-email')
+const midjourneyPassword = document.getElementById('midjourney-password')
+const midjourneyUrl = document.getElementById('midjourney-url')
+const midjourneyDescribeWaittime = document.getElementById('midjourney-describe-waittime')
+const midjourneyDescribeSavefolder = document.getElementById('midjourney-describe-savefolder')
+const midjourneyDescribeSavefolderText = document.getElementById('midjourney-describe-savefolder-text')
+const midjourneyDescribeSavePhrases = document.getElementById('midjourney-describe-savephrases')
+const midjourneyDescribeSavePrompts = document.getElementById('midjourney-describe-saveprompts')
+const midjourneyDescribeSaveKeywords = document.getElementById('midjourney-describe-savekeywords')
+const midjourneyDescribeSaveArtists = document.getElementById('midjourney-describe-saveartists')
+const midjourneyDescribeSaveWeights = document.getElementById('midjourney-describe-saveweights')
+const midjourneyDescribeSourcefolder = document.getElementById('midjourney-describe-sourcefolder')
+const midjourneyDescribeSourcefolderText = document.getElementById('midjourney-describe-sourcefolder-text')
+const midjourneyDescribeStartbutton = document.getElementById('midjourney-describe-startbutton')
+const midjourneyBlendLoops = document.getElementById('midjourney-blend-loops')
+const midjourneyBlendWaittimeText = document.getElementById('midjourney-blend-waittime-text')
+const midjourneyBlendWaittime = document.getElementById('midjourney-blend-waittime')
+const midjourneyBlendSavepath = document.getElementById('midjourney-blend-savepath')
+const midjourneyBlendSavepathText = document.getElementById('midjourney-blend-savepath-text')
+const midjourneyBlendAspectratio = document.getElementById('midjourney-blend-aspectratio')
+const midjourneyBlendNumberOfBlends = document.getElementById('midjourney-blend-numblends')
+const midjourneyBlendImgPath1 = document.getElementById('midjourney-blend-img1path')
+const midjourneyBlendImgPath1Text = document.getElementById('midjourney-blend-img1path-text')
+const midjourneyBlendImgPath2 = document.getElementById('midjourney-blend-img2path')
+const midjourneyBlendImgPath2Text = document.getElementById('midjourney-blend-img2path-text')
+const midjourneyBlendImgPath3 = document.getElementById('midjourney-blend-img3path')
+const midjourneyBlendImgPath3Text = document.getElementById('midjourney-blend-img3path-text')
+const midjourneyBlendImgPath4 = document.getElementById('midjourney-blend-img4path')
+const midjourneyBlendImgPath4Text = document.getElementById('midjourney-blend-img4path-text')
+const midjourneyBlendImgPath5 = document.getElementById('midjourney-blend-img5path')
+const midjourneyBlendImgPath5Text = document.getElementById('midjourney-blend-img5path-text')
+const midjourneyBlendStartButton = document.getElementById('midjourney-blend-startbutton')
+const midjourneyPromptBox = document.getElementById('midjourney-prompt-promptbox')
+const midjourneyPromptLoadPromptsButton = document.getElementById('midjourney-prompt-loadprompts')
+const midjourneyPromptWaittime = document.getElementById('midjourney-prompt-waittime')
+const midjourneyPromptSavepath = document.getElementById('midjourney-prompt-downloadpath-button')
+const midjourneyPromptSavepathText = document.getElementById('midjourney-prompt-downloadpath-text')
+const midjourneyPromptStartButton = document.getElementById('midjourney-prompt-startbutton')
+
+
+// Events
+
+// Login
+loginbutton.addEventListener('click', () => { // Log in, close the welcome screen
+  console.log("logging in...")
+  window.electronAPI.login();
+  loginwindow.style.display = "none";
+  mainWindow.style.display = "flex";
 })
 
-helpbutton.addEventListener('click', (e) => {
+// Navigation Header
+setMainMenuChoice1.addEventListener('click', () => {
+  window.electronAPI.mainmenuChoice(1);
+})
+setMainMenuChoice1.addEventListener('click', () => {
+  window.electronAPI.mainmenuChoice(2);
+})
+setMainMenuChoice1.addEventListener('click', () => {
+  window.electronAPI.mainmenuChoice(3);
+})
+setMainMenuChoice1.addEventListener('click', () => {
+  window.electronAPI.mainmenuChoice(4);
+})
+helpbutton.addEventListener('click', () => {
   window.electronAPI.help();
 })
 
-loginbutton.addEventListener('click', () => {
-  window.electronAPI.login();
+// Prompt page
+window.electronAPI.promptgenLoaded((e, data) => {
+  promptgenPage.style.display = 'flex'
+  bingPage.style.display = 'none'
+  midjourneyPage.style.display = 'none'
+  analysispage.style.display = 'none'
+  if (data.menuChoice === 0) {
+    promptgenTab1Content.style.display === 'flex'
+    promptgenTab2Content.style.display === 'none'
+  } else {
+    promptgenTab1Content.style.display === 'none'
+    promptgenTab2Content.style.display === 'flex'
+  }
+  promptgenShouldSaveGenFile1.checked === data.saveprompt;
+  promptgenShouldSaveGenFile2.checked === data.saveprompt;
+  promptgenPromptCount.value = data.generation.count
+  for(var i = 0; i < data.generation.files.length; i++) {
+    // Add elements for each added file
+  }
+  for(var i = 0; i < data.permutations.files.length; i++) {
+    // Add elements for each added file
+  }
 })
 
-setLoadPrompts.addEventListener('click', () => {
-  window.electronAPI.selectFile().then(result=>{ 
-    prompts.innerHTML = result;
-    bingprompts.innerHTML = result;
-    linecount.innerHTML = result.split('\r\n').length;
+promptgenTab1.addEventListener('click', () => {
+  window.electronAPI.promptgenMenuChoice(0);
+  promptgenTab1Content.style.display === 'flex'
+  promptgenTab2Content.style.display === 'none'
+})
+promptgenTab2.addEventListener('click', () => {
+  window.electronAPI.promptgenMenuChoice(1);
+  promptgenTab1Content.style.display === 'none'
+  promptgenTab2Content.style.display === 'flex'
+})
+
+promptgenAddFileButton.addEventListener('click', () => {
+  window.electronAPI.promptgenAddGenFile().then(result=>{ 
+    // Add element to list
   })
 })
+promptgenGenerateButton.addEventListener('click', () => {
+  window.electronAPI.promptgenGenerate(promptgenPromptbox.value);
+})
+promptgenOpenFileButton.addEventListener('click', () => {
+  window.electronAPI.promptgenLoadGenFile()
+})
+promptgenPromptCount
+promptgenShouldSaveGenFile1.addEventListener('click', (e) => {
+  window.electronAPI.setShouldSaveGenFile(e.target.checked)
+})
 
-setLoadPrompts2.addEventListener('click', () => {
-  window.electronAPI.selectFile().then(result=>{ 
-    prompts.innerHTML = result;
-    bingprompts.innerHTML = result;
-    linecount.innerHTML = result.split('\r\n').length;
+promptgenCombinationAddfileButton.addEventListener('click', () => {
+  window.electronAPI.promptgenAddCombinationGenFile().then(result=>{ 
+    // Add element to list
   })
 })
-
-setButton.addEventListener('click', () => {
-    window.electronAPI.startBot()
+promptgenCombinationGenerateButton.addEventListener('click', () => {
+  window.electronAPI.promptgenCombinationGenerate(promptgenCombintationbox.value);
+})
+promptgenCombinationOpenFileButton.addEventListener('click', () => {
+  window.electronAPI.promptgenLoadCombinationGenFile()
+})
+promptgenShouldSaveGenFile2.addEventListener('click', () => {
+  window.electronAPI.setShouldSaveGenFile(e.target.checked)
 })
 
-setBingButton.addEventListener('click', () => {
+
+// Bing page 
+window.electronAPI.bingLoaded((e, data) => {
+  promptgenPage.style.display = 'none'
+  bingPage.style.display = 'none'
+  midjourneyPage.style.display = 'flex'
+  analysispage.style.display = 'none'
+
+  bingPromptbox.value = data.prompts;
+  bingWaittimeInput.value = data.waittime;
+  bingEmailInput.value = data.email;
+  bingPasswordInput.value = data.password;
+  bingDownloadPathText.value = data.savePath;
+})
+bingLoadpromptsButton.addEventListener('click', () => {
+  window.electronAPI.bingLoadPrompts().then(res => {
+    bingPromptbox.value = res;
+  })
+})
+bingWaittimeInput.addEventListener('change', (e) => {
+  window.electronAPI.bingSetWaitTime(e.target.value)
+})
+bingEmailInput.addEventListener('change', (e) => {
+  window.electronAPI.bingSetEmail(e)
+})
+bingPasswordInput.addEventListener('change', (e) => {
+  window.electronAPI.bingSetPassword(e.target.value)
+})
+bingDownloadPathButton.addEventListener('click', () => {
+  window.electronAPI.setBingDownloadPath().then(res => {
+    bingDownloadPathText.value = res;  
+  })
+})
+bingStartButton.addEventListener('click', () => {
   window.electronAPI.startBing();
 })
 
-const setUsername = document.getElementById('user')
-setUsername.addEventListener('change', (e) => {
-  window.electronAPI.setUsername(e.target.value)
-})
 
-const setBingEmail = document.getElementById('user2')
-setBingEmail.addEventListener('change', (e) => {
-  window.electronAPI.setBingEmail(e.target.value)
-})
+// MidJourney
 
-const setBingDownloadPath = document.getElementById('bingfolder')
-setBingDownloadPath.addEventListener('click', (e) => {
-  window.electronAPI.selectFolder().then(result=>{ 
-    var split = result.split('\\');
-    bingpath.innerHTML = split[split.length -1];
-    window.electronAPI.setBingDownloadPath(result)
-  })
-})
-
-const setBingPassword = document.getElementById('password2')
-setBingPassword.addEventListener('change', (e) => {
-  window.electronAPI.setBingPassword(e.target.value)
-})
-
-const setPassword = document.getElementById('password')
-setPassword.addEventListener('change', (e) => {
-    window.electronAPI.setPassword(e.target.value)
-})
-
-const setDiscordurl = document.getElementById('discordurl')
-setDiscordurl.addEventListener('change', (e) => {
-    window.electronAPI.setDiscordChatUrl(e.target.value)
-})
-
-const setBlendnum = document.getElementById('numblends')
-setBlendnum.addEventListener('change', (e) => {
-    window.electronAPI.setBlendnum(e.target.value)
-})
-
-
-setPromptMode.addEventListener('click', (e) => {    
-  setBlendcontainer.style.display = "none";
-  setPromptcontainer.style.display = "flex";
-  setDescribecontainer.style.display = "none";
-  setBingContainer.style.display = "none"
-  window.electronAPI.setMode(1)
-})
-
-setBlendMode.addEventListener('click', (e) => {    
-  setBlendcontainer.style.display = "flex";
-  setPromptcontainer.style.display = "none";
-  setDescribecontainer.style.display = "none";
-  setBingContainer.style.display = "none"
-  window.electronAPI.setMode(2)
-})
-
-setDescribeMode.addEventListener('click', (e) => {    
-  setBlendcontainer.style.display = "none";
-  setPromptcontainer.style.display = "none";
-  setBingContainer.style.display = "none"
-  setDescribecontainer.style.display = "flex";
-  window.electronAPI.setMode(3)
-})
-
-setBingMode.addEventListener('click', (e) => {
-  setBlendcontainer.style.display = "none";
-  setPromptcontainer.style.display = "none";
-  setDescribecontainer.style.display = "none";
-  setBingContainer.style.display = "flex"
-  window.electronAPI.setMode(4)
-})
-
-imgweight.addEventListener('input', (e) => {
-  window.electronAPI.setImgWeight(e.target.value)
-})
-
-const setStylize2 = document.getElementById('stylize-slider2')
-setStylize2.addEventListener('input', (e) => {
-  stylizeValue2.innerHTML = e.target.value;
-  window.electronAPI.setStylize(e.target.value)
-})
-
-const setChaos2 = document.getElementById('chaos-slider2')
-setChaos2.addEventListener('input', (e) => {
-  chaosValue2.innerHTML = e.target.value;
-  window.electronAPI.setChaos(e.target.value)
-})
-
-const setLoops = document.getElementById('loopcount')
-setLoops.addEventListener('change', (e) => {
-  totaltime.innerHTML = ((e.target.value * setInterval.value) / 60).toFixed(1);
-    window.electronAPI.setLoops(e.target.value)
-})
-
-version.addEventListener('change', (e) => {
-  window.electronAPI.setVersion(e.target.value)
-})
-
-const setInterval = document.getElementById('interval')
-const setInterval2 = document.getElementById('interval2')
-setInterval.addEventListener('change', (e) => {
-  totaltime.innerHTML = ((e.target.value * setLoops.value) / 60).toFixed(1);
-  setInterval2.value = e.target.value;
-  window.electronAPI.setInterval(e.target.value)
-})
-setInterval2.addEventListener('change', (e) => {
-  totaltime.innerHTML = ((e.target.value * setLoops.value) / 60).toFixed(1);
-  setInterval.value = e.target.value;
-  window.electronAPI.setInterval(e.target.value)
-})
-
-const setBlendAspectRatio = document.getElementById('blendaspect-ratio')
-setBlendAspectRatio.addEventListener('change', (e) => {
-    window.electronAPI.setBlendAspect(e.target.value)
-})
-
-const setAspectRatio = document.getElementById('aspect-ratio')
-setAspectRatio.addEventListener('change', (e) => {
-    window.electronAPI.setAspect(e.target.value)
-})
-
-const setImg1Source = document.getElementById('img1folder')
-setImg1Source.addEventListener('click', (e) => {
-  window.electronAPI.selectFolder().then(result=>{ 
-    var split = result.split('\\');
-    img1path.innerHTML = split[split.length -1];
-    window.electronAPI.setImg1Source(result)
-  })
-})
-
-const setImg2Source = document.getElementById('img2folder')
-setImg2Source.addEventListener('click', (e) => {
-  window.electronAPI.selectFolder().then(result=>{ 
-    var split = result.split('\\');
-    img2path.innerHTML = split[split.length -1];
-    window.electronAPI.setImg2Source(result)
-  })
-})
-
-const setImg3Source = document.getElementById('img3folder')
-setImg3Source.addEventListener('click', (e) => {
-  window.electronAPI.selectFolder().then(result=>{ 
-    var split = result.split('\\');
-    img3path.innerHTML = split[split.length -1];
-    window.electronAPI.setImg3Source(result)
-  })
-})
-
-const setImg4Source = document.getElementById('img4folder')
-setImg4Source.addEventListener('click', (e) => {
-  window.electronAPI.selectFolder().then(result=>{ 
-    var split = result.split('\\');
-    img4path.innerHTML = split[split.length -1];
-    window.electronAPI.setImg4Source(result)
-  })
-})
-
-const setImg5Source = document.getElementById('img5folder')
-setImg5Source.addEventListener('click', (e) => {
-  window.electronAPI.selectFolder().then(result=>{ 
-    var split = result.split('\\');
-    img5path.innerHTML = split[split.length -1];
-    window.electronAPI.setImg5Source(result)
-  })
-})
-
-descfolder.addEventListener('click', (e) => {
-  window.electronAPI.selectFolder().then(result => {
-    var split = result.split('\\');
-    descpath.innerHTML = split[split.length -1];
-    window.electronAPI.setDescFolder(result)
-  })
-})
-
-descsavefolder.addEventListener('click', (e) => {
-  window.electronAPI.selectFolder().then(result => {
-    var split = result.split('\\');
-    descsavepath.innerHTML = split[split.length -1];
-    window.electronAPI.setDescSaveFolder(result)
-  })
-})
-
-// Generation
-
-const genButton = document.getElementById('genbutton')
-genButton.addEventListener('click', (e) => {
-  let text = gentext.value;
-  window.electronAPI.generatePrompts(text);
-})
-
-const genCount = document.getElementById('gencount')
-genCount.addEventListener('change', (e) => {
-  window.electronAPI.setPromptCount(e.target.value)
-})
-
-const addButton = document.getElementById('addbutton')
-addButton.addEventListener('click', (e) => {
-  // Add another list item and give it the name of a selected file
-  // make sure to save the path as data to replace the {code}
-  window.electronAPI.addListFile().then(result=>{ 
-    AddListItem(result)
-  })
-})
-
-// Permutation
-
-permuteAddbutton.addEventListener('click', (e) => {
-  window.electronAPI.addPermutationFile().then(result => {
-    AddPermutationItem(result);
-  })
-})
-
-permutebutton.addEventListener('click', (e) => {
-var text = permutetext.value;
-  window.electronAPI.generatePermutations(text);
-})
-
-
-// Other stuff
-
-override.addEventListener('click', (e) => {
-  var val = e.target.checked ? true : false;
-  window.electronAPI.setOverride(val)
-})
-
-// From Renderer
-
-window.electronAPI.loggedin((event, val) => {
-  if (val)
-  {
-    loginwindow.style.display = "none";
-    mainpage.style.display = "flex";
+window.electronAPI.midjourneyLoaded((e, data) => {
+  switch(data.selectedTab) {
+    case 0:
+      midjourneyPrompts.style.display = 'flex'
+      midjourneyBlending.style.display = 'none'
+      midjourneyDescriptions.style.display = 'none' 
+      midjourneySetup.style.display = 'none'
+      break;
+    case 1:
+      midjourneyPrompts.style.display = 'none'
+      midjourneyBlending.style.display = 'flex'
+      midjourneyDescriptions.style.display = 'none' 
+      midjourneySetup.style.display = 'none'
+      break;
+    case 2:
+      midjourneyPrompts.style.display = 'none'
+      midjourneyBlending.style.display = 'none'
+      midjourneyDescriptions.style.display = 'flex' 
+      midjourneySetup.style.display = 'none'
+      break;
+    case 3:
+      midjourneyPrompts.style.display = 'none'
+      midjourneyBlending.style.display = 'none'
+      midjourneyDescriptions.style.display = 'none' 
+      midjourneySetup.style.display = 'flex'
+      break;
+    default:
+      midjourneyPrompts.style.display = 'flex'
+      midjourneyBlending.style.display = 'none'
+      midjourneyDescriptions.style.display = 'none' 
+      midjourneySetup.style.display = 'none'
   }
-  else
-  {
-    errortext.innerHTML = "Login error: please try again."
-  }
+
+  midjourneyEmail.value = data.email; 
+  midjourneyPassword.value = data.password; 
+  midjourneyUrl.value = data.url; 
+
+  midjourneyDescribeWaittime.value = data.describe.waittime;
+  midjourneyDescribeSavefolderText.value = data.describe.savepath;
+  midjourneyDescribeSavePhrases.checked = data.describe.savephrases 
+  midjourneyDescribeSavePrompts.checked = data.describe.saveprompts
+  midjourneyDescribeSaveKeywords.checked = data.describe.savekeywords 
+  midjourneyDescribeSaveArtists.checked = data.describe.saveartists
+  midjourneyDescribeSaveWeights.checked = data.describe.saveweights
+  midjourneyDescribeSourcefolderText.value = data.describe.sourcepath
+
+  midjourneyBlendLoops.value = data.blend.loops 
+  midjourneyBlendWaittimeText.value = data.blend.waittime
+  midjourneyBlendSavepathText.value = data.blend.savepath
+  midjourneyBlendAspectratio.value = data.blend.aspectratio
+  midjourneyBlendNumberOfBlends.value = data.blend.numblends
+  midjourneyBlendImgPath1Text.value = data.blend.img1path
+  midjourneyBlendImgPath2Text.value = data.blend.img2path 
+  midjourneyBlendImgPath3Text.value = data.blend.img3path 
+  midjourneyBlendImgPath4Text.value = data.blend.img4path
+  midjourneyBlendImgPath5Text.value = data.blend.img5path
+
+  midjourneyPromptBox.value = data.promptpath
+  midjourneyPromptWaittime.value = data.waittime
+  midjourneyPromptSavepathText.value = data.savepath
 })
 
-window.electronAPI.loadSettings((event, settings) => {
-  try
-  {
-    var split = "" 
-    mainpage.style.display = "none";
-    setUsername.value = settings.username;
-    setPassword.value = settings.password;
-    setDiscordurl.value = settings.discordchaturl;
-    setBingEmail.value = settings.bingmail;
-    setBingPassword.value = settings.bingpass;
-    setBlendnum.value = settings.blendnum;
-    setLoops.value = settings.loops;
-    setInterval.value = settings.interval;
-    setInterval2.value = settings.interval;
-    setImg1Source.value = settings.img1source;
-    bingpath.value = settings.bingpath;
-    if (settings.img1source) {
-      split = settings.img1source.split('\\');
-      img1path.innerHTML = split[split.length -1];
-    }
-    if (settings.img1source) {
-      split = settings.img1source.split('\\');
-      img1path.innerHTML = split[split.length -1];
-    }
-    if (settings.img2source) {
-      split = settings.img2source.split('\\');
-      img2path.innerHTML = split[split.length -1];
-    }
-    if (settings.img3source) {
-      split = settings.img3source.split('\\');
-      img3path.innerHTML = split[split.length -1];
-    }
-    if (settings.img4source) {
-      split = settings.img4source.split('\\');
-      img4path.innerHTML = split[split.length -1];
-    }
-    if (settings.img5source) {
-      split = settings.img5source.split('\\');
-      img5path.innerHTML = split[split.length -1];
-    }
-    
-    setImg2Source.value = settings.img2source;
-    setImg3Source.value = settings.img3source;
-    setImg4Source.value = settings.img4source;
-    setImg5Source.value = settings.img5source;
-    descfolder.value = settings.descriptions.descpath
-
-    if(settings.descriptions.descpath) {
-      split = settings.descriptions.descpath.split('\\');
-      descpath.innerHTML = split[split.length -1];
-    }
-
-    if(settings.descriptions.descsavepath) {
-      split = settings.descriptions.descsavepath.split('\\');
-      descsavepath.innerHTML = split[split.length -1];
-    }
-    imgweight.value = settings.imageweight;
-    setStylize2.value = settings.stylize;
-    stylizeValue2.innerHTML = settings.stylize.toString();
-    setChaos2.value = settings.chaos;
-    chaosValue2.innerHTML = settings.chaos.toString();
-    setBlendAspectRatio.value = settings.blendaspect;
-    setAspectRatio.value = settings.aspect
-    totaltime.innerHTML = ((settings.loops * settings.interval) / 60).toFixed(1);
-    prompts.innerHTML = settings.prompts;
-    bingprompts.innerHTML = settings.prompts;
-    descPrompts.checked = settings.descriptions.saveprompts;
-    descKeywords.checked = settings.descriptions.savekeywords;
-    descPhrases.checked = settings.descriptions.savephrases;
-    descArtists.checked = settings.descriptions.saveartists;
-    descWeights.checked = settings.descriptions.saveweights;
-    saveGeneration.checked = settings.promptgen.saveGeneration;
-    savePermutation.checked = settings.promptgen.savePermutation;
-    descInterval.value = settings.descriptions.interval;
-    if (settings.mode === 1) //prompts
-    {
-      setBlendcontainer.style.display = "none";
-      setPromptcontainer.style.display = "flex";
-      setDescribecontainer.style.display = "none";
-      setBingContainer.style.display = "none"
-      setPromptMode.checked = true;
-      setBlendMode.checked = false;
-      setDescribeMode.checked = false;
-      setBingMode.checked = false;
-    }
-    else if (settings.mode === 2) //blend
-    {
-      setBlendcontainer.style.display = "flex";
-      setPromptcontainer.style.display = "none";
-      setDescribecontainer.style.display = "none";
-      setBingContainer.style.display = "none"
-      setPromptMode.checked = false;
-      setBlendMode.checked = true;
-      setDescribeMode.checked = false;
-      setBingMode.checked = false;
-    }
-    else if (settings.mode === 3) //describe
-    {
-      setBlendcontainer.style.display = "none";
-      setPromptcontainer.style.display = "none";
-      setDescribecontainer.style.display = "flex";
-      setBingContainer.style.display = "none"
-      setPromptMode.checked = false;
-      setBlendMode.checked = false;
-      setDescribeMode.checked = true;
-      setBingMode.checked = false;
-    }
-    else if (settings.mode === 4) //Bing!
-    {
-      setBlendcontainer.style.display = "none";
-      setPromptcontainer.style.display = "none";
-      setDescribecontainer.style.display = "none";
-      setBingContainer.style.display = "flex"
-      setPromptMode.checked = false;
-      setBlendMode.checked = false;
-      setDescribeMode.checked = false;
-      setBingMode.checked = true;
-    }
-    settings.promptgen.files.forEach(f => {
-      AddListItem(f);
-    });
-    override.checked = settings.override;
-    genCount.value = settings.promptgen.prompts;
-    version.value = settings.version;
-  }
-  catch(err)
-  {
-    console.log(err)
-  }
+midjourneyEmail.addEventListener('change', (e) => {
+  window.electronAPI.setMidjourneyEmail(e.target.value)
 })
+midjourneyPassword.addEventListener('change', (e) => {
+  window.electronAPI.setMidjourneyPassword(e.target.value)
+})
+midjourneyUrl.addEventListener('change', (e) => {
+  window.electronAPI.setMidjourneyUrl(e.target.value)
+})
+midjourneyDescribeWaittime.addEventListener('change', (e) => {
+  window.electronAPI.setMidjourneyDescribeWaittime(e.target.value)
+}) 
+midjourneyDescribeSavefolder.addEventListener('click', (e) => {
+  window.electronAPI.setMidjourneyDescribeSavefolder().then(res => {
+    if (res) {
+      midjourneyDescribeSavefolderText.value = res;
+    }
+  })
+})  
+
+midjourneyDescribeSavePhrases.addEventListener('click', (e) => {
+  window.electronAPI.setMidjourneyDescribeSavePhrases(e.checked)
+}) 
+midjourneyDescribeSavePrompts.addEventListener('click', (e) => {
+  window.electronAPI.setMidjourneyDescribeSavePrompts(e.checked)
+}) 
+midjourneyDescribeSaveKeywords.addEventListener('click', (e) => {
+  window.electronAPI.setMidjourneyDescribeSaveKeywords(e.checked)
+}) 
+midjourneyDescribeSaveArtists.addEventListener('click', (e) => {
+  window.electronAPI.setMidjourneyDescribeSaveArtists(e.checked)
+}) 
+midjourneyDescribeSaveWeights.addEventListener('click', (e) => {
+  window.electronAPI.setMidjourneyDescribeSaveWeights(e.checked)
+}) 
+midjourneyDescribeSourcefolder.addEventListener('click', (e) => {
+  window.electronAPI.setMidjourneyDescribeSource().then(res => {
+    if (res) {
+      midjourneyDescribeSourcefolderText.value = res;
+    }
+  })
+}) 
+midjourneyDescribeStartbutton.addEventListener('click', (e) => {
+  window.electronAPI.startMidJourney(3);
+})  
+midjourneyBlendWaittime.addEventListener('click', (e) => {
+  window.electronAPI.setMidjourneyBlendWaittime(e.target.value)
+  midjourneyBlendWaittimeText.value = int(midjourneyBlendLoops.value) * e.target.value;
+}) 
+midjourneyBlendSavepath.addEventListener('click', (e) => {
+  window.electronAPI.setMidjourneyBlendSavepath().then(res => {
+    if (res) {
+      midjourneyBlendSavepathText.value = res
+    }
+  })
+}) 
+ 
+midjourneyBlendAspectratio.addEventListener('change', (e) => {
+  window.electronAPI.setMidjourneyBlendAspectratio(e.target.value)
+}) 
+midjourneyBlendNumberOfBlends.addEventListener('change', (e) => {
+  window.electronAPI.setMidjourneyBlendNumblends(e.target.value)
+}) 
+midjourneyBlendImgPath1.addEventListener('click', (e) => {
+  window.electronAPI.setMidjourneyBlendImg1Path(e.target.value).then(res => {
+    if (res) 
+      midjourneyBlendImgPath1Text.value = res
+  })
+}) 
+ 
+midjourneyBlendImgPath2.addEventListener('click', (e) => {
+  window.electronAPI.setMidjourneyBlendImg2Path(e.target.value).then(res => {
+    if (res) 
+      midjourneyBlendImgPath2Text.value = res
+  })
+}) 
+
+midjourneyBlendImgPath3.addEventListener('click', (e) => {
+  window.electronAPI.setMidjourneyBlendImg3Path(e.target.value).then(res => {
+    if (res) 
+      midjourneyBlendImgPath3Text.value = res
+  })
+}) 
+
+midjourneyBlendImgPath4.addEventListener('click', (e) => {
+  window.electronAPI.setMidjourneyBlendImg4Path(e.target.value).then(res => {
+    if (res) 
+      midjourneyBlendImgPath4Text.value = res
+  })
+}) 
+
+midjourneyBlendImgPath5.addEventListener('click', (e) => {
+  window.electronAPI.setMidjourneyBlendImg5Path(e.target.value).then(res => {
+    if (res) 
+      midjourneyBlendImgPath5Text.value = res
+  })
+}) 
+
+midjourneyBlendStartButton.addEventListener('click', (e) => {
+  window.electronAPI.startMidJourney(2);
+}) 
+ 
+midjourneyPromptLoadPromptsButton.addEventListener('click', (e) => {
+  window.electronAPI.loadMidjourneyPrompts(e.target.value).then(res => {
+    if (res) 
+    midjourneyPromptBox.value = res
+  })
+}) 
+midjourneyPromptWaittime.addEventListener('change', (e) => {
+  window.electronAPI.setMidjourneyPromptWaittime(e.target.value)
+}) 
+midjourneyPromptSavepath.addEventListener('click', (e) => {
+  window.electronAPI.setMidjourneyPromptSavepath().then(res => {
+    if (res)
+      midjourneyPromptSavepathText.value = res
+  })
+}) 
+
+midjourneyPromptStartButton.addEventListener('click', (e) => {
+  window.electronAPI.startMidJourney(1);
+}) 
+
+
+// SUPPORT FUNCTIONS
 
 /* When the user clicks on the button,
 toggle between hiding and showing the dropdown content */

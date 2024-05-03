@@ -1,3 +1,34 @@
+:root {
+  --background-color: white;
+  --primary-text: #f0ebeb;
+  --secondary-text: #000000;
+  --background-color: #FFF;
+  --primary-color: #00FFFF;
+  --secondary-color: #008080;
+  --highlight-text: #FFA500;
+  --highlight-shadow: #972D01;
+  --header-font: "Montserrat", sans-serif;
+  --regular-font: "Roboto", sans-serif;
+  --static11: rgba(0, 0, 0, 0.03);
+  font-family: var(regular-font);
+  font-size: 1rem;
+  color: var(--secondary-text)
+}
+
+button {
+  background-color: var(--highlight-text);
+  font-weight: normal;
+}
+
+body {
+  margin: 0
+}
+
+
+input[type='radio']:checked {
+  accent-color: var(--orange-highlight);
+}
+
 /* #FACA78 -- Regular text */
 /* #FC8509 -- Highlight text */
 /* #FD6F19 -- Green highlight*/
@@ -6,8 +37,9 @@
 /* #E05510 -- Dark orange highlight */
 /* #D94B06 -- Dark orange */
 /* #972D01 -- Dark orange shadow*/
-:root {
-  --regular-text: #f0ebeb;
+/* :root {
+  --secondary-text: #f0ebeb;
+  --secondary-text: #000; 
   --highlight-text: #FC8509;
   --green-highlight: #ffa000;
   --green-main: #44673A;
@@ -15,10 +47,29 @@
   --orange-highlight: #ffa000;
   --orange-main: #D94B06;
   --orange-shadow: #972D01;
-}
+} */
 
 body {
   margin: 0
+}
+
+#main-page {
+  display: none;  
+}
+
+#loginwindow {
+  display: flex;
+  flex-direction: column;
+  padding-left: 8px;
+  padding-right: 8px;
+}
+
+#loginbutton {
+  padding: 1rem;
+  background-color: var(--secondary-color);
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--primary-text)
 }
 
 .radiocontainer {
@@ -35,20 +86,24 @@ body {
 
 .helptext {
   font-size: 10px;
-  color: var(--regular-text);
+  font-family: var(--regular-font);
+  color: var(--secondary-text);
 }
 
 .reg-text {
-  color: var(--regular-text);
+  font-family: var(--regular-font);
+  color: var(--secondary-text);
 }
 
 .big-text {
-  color: var(--regular-text);
+  color: var(--secondary-text);
+  font-family: var(--header-font);
   font-size: 48px;
 }
 
 .kindabig-text {
-  color: var(--regular-text);
+  color: var(--secondary-text);
+  font-family: var(--header-font);
   font-size: 24px;
 }
 
@@ -56,28 +111,15 @@ body {
   color: var(--highlight-text);
 }
 
-.welcomebox {
-  display: flex; 
-  flex-direction: row; 
-  margin-bottom: 14px; 
-  justify-content: space-around;
-  align-items: center;
-  width: 100vw;
-  border-bottom: 1px solid white;
-  position: sticky;
-  top: 0;
-  background-color: #142426;
-}
-
 .welcomeheader {
-  color: var(--regular-text);
+  color: var(--secondary-text);
   text-shadow: -1px -1px 0 var(--highlight-text);
   margin: 0.5rem;
   font-size: 1.2rem;
 }
 
 .header {
-  color: var(--regular-text);
+  color: var(--secondary-text);
   font-size: 1.2rem;
   font-weight: 700;
 }
@@ -85,8 +127,8 @@ body {
 .helpbutton {
   width: 30px;
   height: 30px;
-  color: var(--regular-text);
-  background-color: var(--orange-main);
+  color: var(--secondary-text);
+  background-color: var(--secondary-color);
   border: 2px solid var(--orange-shadow);
   border-radius: 50%;
 }
@@ -95,7 +137,7 @@ body {
   height: 20px;
   font-size: 14px;
   border: 1px solid var(--orange-highlight);
-  width: 150px;
+  width: 175px;
 }
 
 .selectcontainer {
@@ -110,16 +152,12 @@ body {
   flex-direction: column;
 }
 
-#loginwindow {
-  padding-left: 8px;
-}
-
 #startbot-button {
   width: 100px;
   margin-left: 8px;
   margin-right: 8px;
   height: 30px;
-  color: var(--regular-text);
+  color: var(--secondary-text);
   background-color: var(--orange-main);
   font-size: 20px;
 }
@@ -127,6 +165,7 @@ body {
 #blendcontainer, #describecontainer, #bingcontainer {
   display: flex;
   flex-direction: column;
+
 }
 
 #promptcontainer {
@@ -139,7 +178,7 @@ body {
   width: 150px;
   height: 30px;
   font-size: 16px;
-  color: var(--regular-text);
+  color: var(--secondary-text);
   background-color: var(--green-shadow);
 }
 
@@ -157,7 +196,7 @@ body {
 }
 
 #kek {
-  color: var(--regular-text);
+  color: var(--secondary-text);
   background-color: var(--green-shadow);
   border: 1px solid var(--orange-highlight);
   height: 24px;
@@ -166,8 +205,6 @@ body {
 .folderbutton {
   width: 100px; 
   height: 24px;
-  color: var(--regular-text);
-  background-color: var(--green-shadow);
 }
 
 .promptbox {
@@ -286,6 +323,7 @@ width: 100px;
 .switch {
     position: relative;
     display: inline-block;
+    background-color: var(--static11);
     width: 40px;
     height: 24px;
   }
@@ -295,6 +333,7 @@ width: 100px;
     opacity: 0;
     width: 0;
     height: 0;
+    background-color: var(--highlight-shadow);
   }
   
   /* The slider */
@@ -305,10 +344,11 @@ width: 100px;
     left: 0;
     right: 0;
     bottom: 0;
-    background-color: var(--orange-main);
-    color: var(--regular-text);
+    background-color: var(--highlight-text);
+    color: var(--secondary-text);
     -webkit-transition: .4s;
     transition: .4s;
+    border: 1px solid black;
   }
   
   .slider:before {
@@ -318,21 +358,21 @@ width: 100px;
     width: 18px;
     left: 3px;
     bottom: 3px;
-    background-color: white;
+    background-color: var(--secondary-text);
     -webkit-transition: .4s;
     transition: .4s;
   }
   
   input:checked + .slider {
-    background-color: #2196F3;
+    background-color: var(--highlight-text);
   }
 
   input:not(:checked) + .slider {
-    background-color: var(--green-shadow)
+    background-color: var(--static11)
   }
   
   input:focus + .slider {
-    box-shadow: 0 0 1px #2196F3;
+    box-shadow: 0 0 1px var(--highlight-text);
   }
   
   input:checked + .slider:before {
@@ -430,7 +470,7 @@ width: 100px;
     margin-left: 8px;
     margin-right: 8px;
     height: 30px;
-    color: var(--regular-text);
+    color: var(--secondary-text);
     background-color: var(--orange-main);
     font-size: 20px;
   }
@@ -467,6 +507,7 @@ width: 100px;
     display: flex; 
     flex-direction: row;
     gap: 1rem;
+    margin-top: 0.5rem;
   }
 
   .generatorpage {
@@ -491,15 +532,9 @@ width: 100px;
     text-align: center;
   }
 
-  #filelist {
-    display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
-  }
-
   #addbutton, #permuteaddbutton, #genbutton, #permutebutton {
     margin-top: 0.5rem;
-    color: var(--regular-text);
+    color: var(--secondary-text);
     background-color: var(--green-shadow);
     border: 1px solid var(--orange-highlight);
     height: 24px;
@@ -508,7 +543,7 @@ width: 100px;
   .reviewbox {
     display: flex;
     flex-direction: column;
-    border: 1px solid var(--orange-highlight);
+    background-color: var(--static11);
     padding-top: 0.5rem;
     padding-bottom: 0.5rem;
     padding-left: 4px;
@@ -601,13 +636,6 @@ width: 100px;
   border: 1px solid white;
 }
 
-.file-container {
-  display: flex;
-  flex-direction: column;
-  border: 1px solid var(--orange-highlight);
-  height: 100%;
-}
-
 .file-list {
   display: flex;
   flex-direction: column;
@@ -615,6 +643,7 @@ width: 100px;
 
 .genbox {
   text-align: center;
+  margin-top:0.5rem;
 }
 
 .permbox {
@@ -627,4 +656,101 @@ width: 100px;
 .bu {
   gap: 4px !important;
   align-items: center !important;
+}
+
+.welcomebox {
+  display: flex; 
+  flex-direction: row; 
+  justify-content: space-between;
+  align-items: center;
+  /* width: 100vw; */
+  border-bottom: 1px solid white;
+  position: sticky;
+  top: 0;
+  background-color: var(--background-color);
+}
+
+.radiocontainer {
+  display: flex; 
+  flex-direction: row; 
+  gap: 14px;
+  border: 1px solid var(--highlight-text);
+  width: fit-content;
+  padding: 4px;
+}
+
+.helpbox {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.helptext {
+  font-size: 10px;
+  color: var(--secondary-text);
+}
+
+.helpbutton {
+  width: 30px;
+  height: 30px;
+  color: var(--secondary-text);
+  background-color: var(--secondary-color);
+  border: 2px solid var(--secondary-text);
+  border-radius: 50%;
+}
+
+/* Promptgen */
+
+.promptgen-textarea {
+  max-width: 80%;
+  min-width: 60%;
+  flex: 1;
+  min-height: 100px;
+}
+
+.promptgen-filelist {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.file-container {
+  display: flex;
+  flex-direction: column;
+  border: 1px solid var(--orange-highlight);
+  height: 100%;
+  min-width: 20%;
+  width: 20%;
+  max-width: 30%;
+}
+
+.promptgen-input-wrapper {
+  display: flex;
+  flex-direction: row;
+}
+
+.promptgen-tab {
+  padding: 0.5rem;
+  font-weight: 700;
+  border-bottom-color: transparent;
+  cursor: default;
+}
+
+.active {
+  color: var(--secondary-text);
+  background-color: var(--primary-color);
+  border: 1px solid var(--highlight-text);
+  border-bottom-color: transparent;
+}
+
+.inactive {
+  color: black;
+  background-color: var(--static11);
+  border: 1px solid var(--highlight-text);
+  border-bottom-color: transparent;
+}
+
+.nav-tabs {
+  padding-left: 0;
 }
