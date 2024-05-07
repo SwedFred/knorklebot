@@ -528,17 +528,16 @@ ipcMain.on('bing-start', (event, arg) => {
   } catch(ex) {console.log(ex)}
 });
 
- ipcMain.on('promptgen-removelistfile', (event, arg) => {
-  settings.promptgen.generation.files.splice(arg,1)
+ ipcMain.on('promptgen-combination-removelistfile', (event,arg) => {
+  settings.promptgen.permutations.files.splice(settings.promptgen.permutations.files.indexOf(arg), 1); 
   fs.writeFileSync(settingspath,JSON.stringify(settings));
-  mainWindow?.webContents.send('promptgen-filelist-load', settings.promptgen.generation.files)
- });
-
- ipcMain.on('promptgen-combination-removelistfile', (event, arg) => {
-  settings.promptgen.permutations.files.splice(arg,1)
+  mainWindow?.webContents.send('promptgen-combination-filelist-load', settings.promptgen.permutations.files);
+});
+ipcMain.on('promptgen-removelistfile', (event,arg) => {
+  settings.promptgen.generation.files.splice(settings.promptgen.generation.files.indexOf(arg), 1); 
   fs.writeFileSync(settingspath,JSON.stringify(settings));
-  mainWindow?.webContents.send('promptgen-combination-filelist-load', settings.promptgen.permutations.files)
- });
+  mainWindow?.webContents.send('promptgen-filelist-load', settings.promptgen.generation.files);
+});
 
  ipcMain.on('promptgen-generate', async (event, arg) => {
   console.log(arg)

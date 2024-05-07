@@ -726,6 +726,22 @@ width: 100px;
   gap: 0.5rem;
 }
 
+.filelistitem-container {
+  display: flex;
+  flex-direction: row;
+  gap:1rem;
+  justify-content: space-between;
+}
+
+.filelistitem-text {
+  margin: 0;
+}
+
+.filelistitem-button {
+  color: white;
+  background-color: red;
+}
+
 .file-container {
   display: flex;
   flex-direction: column;

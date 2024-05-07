@@ -101,8 +101,6 @@ const LoggedIn = () => {
 }
 
 const SetPageVisibility = (val) => {
-  console.log(val)
-  console.log(typeof(val))
   switch (val) {
     case 1:
       promptgenPage.style.display = 'flex'
@@ -254,14 +252,14 @@ window.electronAPI.promptgenLoaded((e, data) => {
       promptgenTab1Content.style.display = 'none'
       promptgenTab2Content.style.display = 'flex'
     }
-    promptgenShouldSaveGenFile1.checked === data.cache;
-    promptgenShouldSaveGenFile2.checked === data.cache;
+    promptgenShouldSaveGenFile1.checked = data.cache;
+    promptgenShouldSaveGenFile2.checked = data.cache;
     promptgenPromptCount.value = data.generations
     for (var i = 0; i < data.genfiles.length; i++) {
-      // Add elements for each added file
+      AddListItem(data.genfiles[i])
     }
     for (var i = 0; i < data.permfiles.length; i++) {
-      // Add elements for each added file
+      AddPermutationItem(data.permfiles[i])
     }
     SetPageVisibility(1);
   } catch (err) { console.log(err) }
@@ -308,7 +306,13 @@ midjourneyTab4.addEventListener('click', () => {
 
 promptgenAddFileButton.addEventListener('click', () => {
   window.electronAPI.promptgenAddGenFile().then(result => {
-    // Add element to list
+    if (result) {
+      var filelist = document.getElementById('promptgen-filelist')
+      filelist.replaceChildren()
+    }
+    for(var i = 0; i < result.length; i++) {
+      AddListItem(result[i])
+    }
   })
 })
 promptgenGenerateButton.addEventListener('click', () => {
@@ -330,7 +334,13 @@ promptgenShouldSaveGenFile1.addEventListener('click', (e) => {
 
 promptgenCombinationAddfileButton.addEventListener('click', () => {
   window.electronAPI.promptgenAddCombinationGenFile().then(result => {
-    // Add element to list
+    if (result) {
+      var filelist = document.getElementById('promptgen-combination-filelist')
+      filelist.replaceChildren()
+    }
+    for(var i = 0; i < result.length; i++) {
+      AddPermutationItem(result[i])
+    }
   })
 })
 promptgenCombinationGenerateButton.addEventListener('click', () => {
@@ -343,14 +353,26 @@ promptgenCombinationOpenFileButton.addEventListener('click', () => {
   })
 })
 window.electronAPI.promptgenLoadCombinationFileList((e, data) => {
-  console.log("IMPLEMENT THIS")
+    var filelist = document.getElementById('promptgen-combination-filelist')
+    filelist.replaceChildren()
+    if (data) {
+      for(var i = 0; i < data.length; i++) {
+        AddPermutationItem(result[i])
+      }
+    }
 })
 
 window.electronAPI.promptgenLoadFileList((e, data) => {
-  console.log("IMPLEMENT THIS")
+  var filelist = document.getElementById('promptgen-combination-filelist')
+  filelist.replaceChildren()
+  if (data) {
+    for(var i = 0; i < result.length; i++) {
+      AddPermutationItem(result[i])
+    }
+  }
 })
 
-promptgenShouldSaveGenFile2.addEventListener('click', () => {
+promptgenShouldSaveGenFile2.addEventListener('click', (e) => {
   window.electronAPI.setShouldSaveGenFile(e.target.checked)
 })
 
@@ -600,21 +622,21 @@ function AddListItem(item) {
   var filename = split[split.length - 1];
   filename = filename.substring(0, filename.lastIndexOf('.'));
   var container = document.createElement('div')
-  container.className = 'gen-container'
+  container.classList.add('filelistitem-container')
   var name = document.createElement('p')
   name.appendChild(document.createTextNode(filename))
-  name.className = "reg-text nm"
-  var deletebutton = document.createElement('div')
-  deletebutton.appendChild(document.createTextNode("-"))
-  deletebutton.className = "deletebutton"
+  name.classList.add('filelistitem-text')
+  var deletebutton = document.createElement('button')
+  deletebutton.classList.add('filelistitem-button')
+  deletebutton.innerHTML = "REMOVE"
   container.appendChild(name)
-  var filelist = document.getElementById('filelist')
+  var filelist = document.getElementById('promptgen-filelist')
   var listlength = filelist.children.length;
   deletebutton.dataset.index = listlength;
   deletebutton.addEventListener('click', (e) => {
     var index = e.target.getAttribute('data-index')
-    window.electronAPI.removeListFile(index)
-    var filelist = document.getElementById('filelist')
+    window.electronAPI.removeListFile(item)
+    var filelist = document.getElementById('promptgen-filelist')
     filelist.removeChild(e.currentTarget.parentElement)
   })
   container.appendChild(deletebutton)
@@ -623,55 +645,27 @@ function AddListItem(item) {
 
 
 function AddPermutationItem(item) {
-  console.log(item)
   var split = item.split('\\');
   var filename = split[split.length - 1];
   filename = filename.substring(0, filename.lastIndexOf('.'));
   var container = document.createElement('div')
-  container.className = 'gen-container'
+  container.classList.add('filelistitem-container')
   var name = document.createElement('p')
   name.appendChild(document.createTextNode(filename))
-  name.className = "reg-text nm"
-  var deletebutton = document.createElement('div')
-  deletebutton.appendChild(document.createTextNode("-"))
-  deletebutton.className = "deletebutton"
+  name.classList.add('filelistitem-text')
+  var deletebutton = document.createElement('button')
+  deletebutton.classList.add('filelistitem-button')
+  deletebutton.innerHTML = "REMOVE"
   container.appendChild(name)
-  var filelist = document.getElementById('permutefilelist')
+  var filelist = document.getElementById('promptgen-combination-filelist')
   var listlength = filelist.children.length;
   deletebutton.dataset.index = listlength;
   deletebutton.addEventListener('click', (e) => {
     var index = e.target.getAttribute('data-index')
-    window.electronAPI.removePermutationFile(index)
-    var filelist = document.getElementById('permutefilelist')
+    window.electronAPI.removePermutationFile(item)
+    var filelist = document.getElementById('promptgen-combination-filelist')
     filelist.removeChild(e.currentTarget.parentElement)
   })
   container.appendChild(deletebutton)
   filelist.appendChild(container)
 }
-
-// Tabs logic
-window.addEventListener("load", function () {
-  // store tabs variable
-  // var myTabs = document.querySelectorAll("ul.nav-tabs > li");
-  // function myTabClicks(tabClickEvent) {
-  // 	for (var i = 0; i < myTabs.length; i++) {
-  // 		myTabs[i].classList.remove("active");
-  //     myTabs[i].classList.replace("important-text", "reg-text");
-  // 	}
-  // 	var clickedTab = tabClickEvent.currentTarget;
-  // 	clickedTab.classList.add("active");
-  //   clickedTab.classList.replace("reg-text", "important-text");
-  // 	tabClickEvent.preventDefault();
-  // 	var myContentPanes = document.querySelectorAll(".tab-pane");
-  // 	for (i = 0; i < myContentPanes.length; i++) {
-  // 		myContentPanes[i].classList.remove("active");
-  // 	}
-  // 	var anchorReference = tabClickEvent.target;
-  // 	var activePaneId = anchorReference.getAttribute("href");
-  // 	var activePane = document.querySelector(activePaneId);
-  // 	activePane.classList.add("active");
-  // }
-  // for (i = 0; i < myTabs.length; i++) {
-  // 	myTabs[i].addEventListener("click", myTabClicks)
-  // }
-});
