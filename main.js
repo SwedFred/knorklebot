@@ -153,6 +153,7 @@ app
 
     // General 
     ipcMain.on('change-page', (e,arg) => {
+      settings.selectedmode = arg; fs.writeFileSync(settingspath,JSON.stringify(settings))
       switch(arg) {
         case 1:
           mainWindow.webContents.send('promptgen-loaded', GetPromptGenData());
@@ -260,7 +261,6 @@ ipcMain.on('analysis-updated', (event,arg) => {
 
 // IPCMain.on calls
 // Header
-ipcMain.on('update-page', (event,arg) => {mainWindow.webContents.send('page-update', arg); settings.selectedmode = arg; fs.writeFileSync(settingspath,JSON.stringify(settings));})
 ipcMain.on('help', (event, arg) => {shell.openExternal("https://www.youtube.com/channel/UCaCm9nJTmy-lHSGpBM7L6sg");})
 
 // Prompt gen
@@ -424,7 +424,7 @@ ipcMain.handle('midjourney-prompt-set-savepath', async () => {
   }
 });
 
-ipcMain.handle('mj-blend-savepath-set', async () => {
+ipcMain.handle('midjourney-blend-set-savepath', async () => {
   const { canceled, filePaths } = await dialog.showOpenDialog(mainWindow, {
     title: 'Select save directory',
     properties: ['openDirectory']
@@ -498,6 +498,8 @@ ipcMain.on('midjourney-describe-savephrases', (event,arg) => {settings.midjourne
 ipcMain.on('midjourney-describe-saveartists', (event,arg) => {settings.midjourney.descriptions.saveartists = arg; fs.writeFileSync(settingspath,JSON.stringify(settings))})
 ipcMain.on('midjourney-describe-saveweights', (event,arg) => {settings.midjourney.descriptions.saveweights = arg; fs.writeFileSync(settingspath,JSON.stringify(settings))})
 ipcMain.on('promptgen-tab-selected', (event,arg) => {settings.promptgen.menuchoice = arg; fs.writeFileSync(settingspath,JSON.stringify(settings))})
+ipcMain.on('midjourney-blend-set-aspectratio', (event, arg) => {settings.midjourney.blends.aspect = arg; fs.writeFileSync(settingspath,JSON.stringify(settings))})
+ipcMain.on('midjourney-blend-set-numblends', (event, arg) => {settings.midjourney.blends.blendnum = arg; fs.writeFileSync(settingspath,JSON.stringify(settings))})
 
 
 // End
@@ -711,7 +713,7 @@ ipcMain.on('bing-start', (event, arg) => {
     file = fs.readFileSync(settings.bing.promptpath, 'utf-8');
   if (fs.existsSync(settings.bing.savepath))
     spath = settings.bing.savepath
-  return {pass: settings.bing.password, email: settings.bing.email, path: spath,prompt: file, time: settings.bing.waittime }
+  return {password: settings.bing.password, email: settings.bing.email, savepath: spath,prompts: file, waittime: settings.bing.waittime }
  }
 
  const GetMidjourneyData = () => {

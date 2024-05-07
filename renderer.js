@@ -101,8 +101,10 @@ const LoggedIn = () => {
 }
 
 const SetPageVisibility = (val) => {
-  switch(val) {
-    case 1: 
+  console.log(val)
+  console.log(typeof(val))
+  switch (val) {
+    case 1:
       promptgenPage.style.display = 'flex'
       bingPage.style.display = 'none'
       midjourneyPage.style.display = 'none'
@@ -143,7 +145,7 @@ const SetPageVisibility = (val) => {
 }
 
 const SetMidJourneyTabVisibility = (val) => {
-  switch(val) {
+  switch (val) {
     case 1:
       midjourneyTab1.classList.remove('inactive')
       midjourneyTab1.classList.add('active')
@@ -232,36 +234,37 @@ helpbutton.addEventListener('click', () => {
 
 // Prompt page
 window.electronAPI.promptgenLoaded((e, data) => {
-  console.log(data)
-  promptgenPage.style.display = 'flex'
-  bingPage.style.display = 'none'
-  midjourneyPage.style.display = 'none'
-  analysispage.style.display = 'none'
-  if (data.menuChoice === 0) {
-    promptgenTab1.classList.add("active")
-    promptgenTab1.classList.remove("inactive")
-    promptgenTab2.classList.remove("active")
-    promptgenTab2.classList.add("inactive")
-    promptgenTab1Content.style.display = 'flex'
-    promptgenTab2Content.style.display = 'none'
-  } else {
-    promptgenTab1.classList.add("inactive")
-    promptgenTab1.classList.remove("active")
-    promptgenTab2.classList.add("active")
-    promptgenTab2.classList.remove("inactive")
-    promptgenTab1Content.style.display = 'none'
-    promptgenTab2Content.style.display = 'flex'
-  }
-  promptgenShouldSaveGenFile1.checked === data.cache;
-  promptgenShouldSaveGenFile2.checked === data.cache;
-  promptgenPromptCount.value = data.generations
-  for(var i = 0; i < data.genfiles.length; i++) {
-    // Add elements for each added file
-  }
-  for(var i = 0; i < data.permfiles.length; i++) {
-    // Add elements for each added file
-  }
-  SetPageVisibility(1);
+  try {
+    promptgenPage.style.display = 'flex'
+    bingPage.style.display = 'none'
+    midjourneyPage.style.display = 'none'
+    analysispage.style.display = 'none'
+    if (data.menuChoice === 0) {
+      promptgenTab1.classList.add("active")
+      promptgenTab1.classList.remove("inactive")
+      promptgenTab2.classList.remove("active")
+      promptgenTab2.classList.add("inactive")
+      promptgenTab1Content.style.display = 'flex'
+      promptgenTab2Content.style.display = 'none'
+    } else {
+      promptgenTab1.classList.add("inactive")
+      promptgenTab1.classList.remove("active")
+      promptgenTab2.classList.add("active")
+      promptgenTab2.classList.remove("inactive")
+      promptgenTab1Content.style.display = 'none'
+      promptgenTab2Content.style.display = 'flex'
+    }
+    promptgenShouldSaveGenFile1.checked === data.cache;
+    promptgenShouldSaveGenFile2.checked === data.cache;
+    promptgenPromptCount.value = data.generations
+    for (var i = 0; i < data.genfiles.length; i++) {
+      // Add elements for each added file
+    }
+    for (var i = 0; i < data.permfiles.length; i++) {
+      // Add elements for each added file
+    }
+    SetPageVisibility(1);
+  } catch (err) { console.log(err) }
 })
 
 promptgenTab1.addEventListener('click', () => {
@@ -304,7 +307,7 @@ midjourneyTab4.addEventListener('click', () => {
 })
 
 promptgenAddFileButton.addEventListener('click', () => {
-  window.electronAPI.promptgenAddGenFile().then(result=>{ 
+  window.electronAPI.promptgenAddGenFile().then(result => {
     // Add element to list
   })
 })
@@ -326,7 +329,7 @@ promptgenShouldSaveGenFile1.addEventListener('click', (e) => {
 })
 
 promptgenCombinationAddfileButton.addEventListener('click', () => {
-  window.electronAPI.promptgenAddCombinationGenFile().then(result=>{ 
+  window.electronAPI.promptgenAddCombinationGenFile().then(result => {
     // Add element to list
   })
 })
@@ -339,11 +342,11 @@ promptgenCombinationOpenFileButton.addEventListener('click', () => {
       promptgenCombintationbox.value = res
   })
 })
-window.electronAPI.promptgenLoadCombinationFileList((e,data) => {
+window.electronAPI.promptgenLoadCombinationFileList((e, data) => {
   console.log("IMPLEMENT THIS")
 })
 
-window.electronAPI.promptgenLoadFileList((e,data) => {
+window.electronAPI.promptgenLoadFileList((e, data) => {
   console.log("IMPLEMENT THIS")
 })
 
@@ -353,18 +356,22 @@ promptgenShouldSaveGenFile2.addEventListener('click', () => {
 
 
 // Bing page 
-window.electronAPI.bingLoaded((event,data) => {
-  promptgenPage.style.display = 'none'
-  bingPage.style.display = 'none'
-  midjourneyPage.style.display = 'flex'
-  analysispage.style.display = 'none'
+window.electronAPI.bingLoaded((event, data) => {
+  console.log(data.email)
+  try {
+    promptgenPage.style.display = 'none'
+    bingPage.style.display = 'none'
+    midjourneyPage.style.display = 'flex'
+    analysispage.style.display = 'none'
 
-  bingPromptbox.value = data.prompts;
-  bingWaittimeInput.value = data.waittime;
-  bingEmailInput.value = data.email;
-  bingPasswordInput.value = data.password;
-  bingDownloadPathText.value = data.savePath;
-  SetPageVisibility(3);
+    bingPromptbox.value = data.prompts;
+    bingWaittimeInput.value = data.waittime;
+    bingEmailInput.value = data.email;
+    bingPasswordInput.value = data.password;
+    if (data.savepath)
+      bingDownloadPathText.innerHTML = data.savepath.substring(data.savepath.lastIndexOf('\\') + 1);
+    SetPageVisibility(3);
+  } catch (err) { console.log(err) }
 })
 bingLoadpromptsButton.addEventListener('click', () => {
   window.electronAPI.bingLoadPrompts().then(res => {
@@ -375,14 +382,15 @@ bingWaittimeInput.addEventListener('change', (e) => {
   window.electronAPI.bingSetWaitTime(e.target.value)
 })
 bingEmailInput.addEventListener('change', (e) => {
-  window.electronAPI.bingSetEmail(e)
+  window.electronAPI.bingSetEmail(e.target.value)
 })
 bingPasswordInput.addEventListener('change', (e) => {
   window.electronAPI.bingSetPassword(e.target.value)
 })
 bingDownloadPathButton.addEventListener('click', () => {
   window.electronAPI.setBingDownloadPath().then(res => {
-    bingDownloadPathText.value = res;  
+    if (res)
+      bingDownloadPathText.innerHTML = res.substring(res.lastIndexOf('\\') + 1);
   })
 })
 bingStartButton.addEventListener('click', () => {
@@ -394,38 +402,49 @@ bingStartButton.addEventListener('click', () => {
 
 window.electronAPI.midjourneyLoaded((event, data) => {
   try {
-
     SetMidJourneyTabVisibility(parseInt(data.selectedtab))
-  
-    midjourneyEmail.value = data.email; 
-    midjourneyPassword.value = data.password; 
-    midjourneyUrl.value = data.url; 
-  
+
+    midjourneyEmail.value = data.email;
+    midjourneyPassword.value = data.password;
+    midjourneyUrl.value = data.url;
+
     midjourneyDescribeWaittime.value = data.describe.waittime;
-    midjourneyDescribeSavefolderText.value = data.describe.savepath;
-    midjourneyDescribeSavePhrases.checked = data.describe.savephrases 
+    if (data.describe.savepath)
+      midjourneyDescribeSavefolderText.innerHTML = data.describe.savepath.substring(data.describe.savepath.lastIndexOf('\\') + 1);
+    midjourneyDescribeSavePhrases.checked = data.describe.savephrases
     midjourneyDescribeSavePrompts.checked = data.describe.saveprompts
-    midjourneyDescribeSaveKeywords.checked = data.describe.savekeywords 
+    midjourneyDescribeSaveKeywords.checked = data.describe.savekeywords
     midjourneyDescribeSaveArtists.checked = data.describe.saveartists
     midjourneyDescribeSaveWeights.checked = data.describe.saveweights
-    midjourneyDescribeSourcefolderText.value = data.describe.sourcepath
-  
-    midjourneyBlendLoops.value = data.blends.loops 
-    midjourneyBlendWaittimeText.value = data.blends.waittime
-    midjourneyBlendSavepathText.value = data.blends.savepath
+    if (data.describe.sourcepath)
+      midjourneyDescribeSourcefolderText.innerHTML = data.describe.sourcepath.substring(data.describe.sourcepath.lastIndexOf('\\') + 1);
+
+    midjourneyBlendLoops.value = data.blends.loops
+    midjourneyBlendWaittime.value = data.blends.waittime
+    if (data.blends.waittime) {
+      midjourneyBlendWaittimeText.innerHTML = parseInt(data.blends.loops) * data.blends.waittime / 60;
+    }
+    if (data.blends.savepath)
+      midjourneyBlendSavepathText.innerHTML = data.blends.savepath.substring(data.blends.savepath.lastIndexOf('\\') + 1)
     midjourneyBlendAspectratio.value = data.blends.aspect
     midjourneyBlendNumberOfBlends.value = data.blends.blendnum
-    midjourneyBlendImgPath1Text.value = data.blends.img1source
-    midjourneyBlendImgPath2Text.value = data.blends.img2source
-    midjourneyBlendImgPath3Text.value = data.blends.img3source 
-    midjourneyBlendImgPath4Text.value = data.blends.img4source
-    midjourneyBlendImgPath5Text.value = data.blends.img5source
-  
+    if (data.blends.img1source)
+      midjourneyBlendImgPath1Text.innerHTML = data.blends.img1source.substring(data.blends.img1source.lastIndexOf('\\') + 1)
+    if (data.blends.img2source)
+      midjourneyBlendImgPath2Text.innerHTML = data.blends.img2source.substring(data.blends.img2source.lastIndexOf('\\') + 1)
+    if (data.blends.img3source)
+      midjourneyBlendImgPath3Text.innerHTML = data.blends.img3source.substring(data.blends.img3source.lastIndexOf('\\') + 1)
+    if (data.blends.img4source)
+      midjourneyBlendImgPath4Text.innerHTML = data.blends.img4source.substring(data.blends.img4source.lastIndexOf('\\') + 1)
+    if (data.blends.img5source)
+      midjourneyBlendImgPath5Text.innerHTML = data.blends.img5source.substring(data.blends.img5source.lastIndexOf('\\') + 1)
+
     midjourneyPromptBox.value = data.promptpath
     midjourneyPromptWaittime.value = data.waittime
-    midjourneyPromptSavepathText.value = data.savepath
+    if (data.savepath)
+      midjourneyPromptSavepathText.innerHTML = data.savepath.substring(data.savepath.lastIndexOf('\\') + 1)
     SetPageVisibility(2);
-  }catch(err) {console.log(err)}
+  } catch (err) { console.log(err) }
 })
 
 midjourneyEmail.addEventListener('change', (e) => {
@@ -439,117 +458,117 @@ midjourneyUrl.addEventListener('change', (e) => {
 })
 midjourneyDescribeWaittime.addEventListener('change', (e) => {
   window.electronAPI.setMidjourneyDescribeWaittime(e.target.value)
-}) 
+})
 midjourneyDescribeSavefolder.addEventListener('click', (e) => {
   window.electronAPI.setMidjourneyDescribeSavefolder().then(res => {
     if (res) {
-      midjourneyDescribeSavefolderText.value = res;
+      midjourneyDescribeSavefolderText.innerHTML = res.substring(res.lastIndexOf('\\') + 1);
     }
   })
-})  
+})
 
 midjourneyDescribeSavePhrases.addEventListener('click', (e) => {
   window.electronAPI.setMidjourneyDescribeSavePhrases(e.checked)
-}) 
+})
 midjourneyDescribeSavePrompts.addEventListener('click', (e) => {
   window.electronAPI.setMidjourneyDescribeSavePrompts(e.checked)
-}) 
+})
 midjourneyDescribeSaveKeywords.addEventListener('click', (e) => {
   window.electronAPI.setMidjourneyDescribeSaveKeywords(e.checked)
-}) 
+})
 midjourneyDescribeSaveArtists.addEventListener('click', (e) => {
   window.electronAPI.setMidjourneyDescribeSaveArtists(e.checked)
-}) 
+})
 midjourneyDescribeSaveWeights.addEventListener('click', (e) => {
   window.electronAPI.setMidjourneyDescribeSaveWeights(e.checked)
-}) 
+})
 midjourneyDescribeSourcefolder.addEventListener('click', (e) => {
   window.electronAPI.setMidjourneyDescribeSource().then(res => {
     if (res) {
-      midjourneyDescribeSourcefolderText.value = res;
+      midjourneyDescribeSourcefolderText.innerHTML = res.substring(res.lastIndexOf('\\') + 1);
     }
   })
-}) 
+})
 midjourneyDescribeStartbutton.addEventListener('click', (e) => {
   window.electronAPI.startMidJourney(3);
-})  
+})
 midjourneyBlendWaittime.addEventListener('click', (e) => {
   window.electronAPI.setMidjourneyBlendWaittime(e.target.value)
-  midjourneyBlendWaittimeText.value = parseInt(midjourneyBlendLoops.value) * e.target.value;
-}) 
+  midjourneyBlendWaittimeText.value = parseInt(midjourneyBlendLoops.value) * e.target.value / 60;
+})
 midjourneyBlendSavepath.addEventListener('click', (e) => {
   window.electronAPI.setMidjourneyBlendSavepath().then(res => {
     if (res) {
-      midjourneyBlendSavepathText.value = res
+      midjourneyBlendSavepathText.innerHTML = res.substring(res.lastIndexOf('\\') + 1)
     }
   })
-}) 
- 
+})
+
 midjourneyBlendAspectratio.addEventListener('change', (e) => {
-  window.electronAPI.setMidjourneyBlendAspectratio(e.target.value)
-}) 
+  window.electronAPI.setMidjourneyBlendAspectrationeyBlendAspectratio(e.target.value)
+})
 midjourneyBlendNumberOfBlends.addEventListener('change', (e) => {
   window.electronAPI.setMidjourneyBlendNumblends(e.target.value)
-}) 
+})
 midjourneyBlendImgPath1.addEventListener('click', (e) => {
-  window.electronAPI.setMidjourneyBlendImg1Path().then(res => {
-    if (res) 
-      midjourneyBlendImgPath1Text.value = res
+  window.electronAPI.setMidjourneyBlendImgPath(1).then(res => {
+    if (res)
+      midjourneyBlendImgPath1Text.innerHTML = res.substring(res.lastIndexOf('\\') + 1)
   })
-}) 
- 
+})
+
 midjourneyBlendImgPath2.addEventListener('click', (e) => {
-  window.electronAPI.setMidjourneyBlendImg2Path().then(res => {
-    if (res) 
-      midjourneyBlendImgPath2Text.value = res
+  window.electronAPI.setMidjourneyBlendImgPath(2).then(res => {
+    if (res)
+      midjourneyBlendImgPath2Text.innerHTML = res.substring(res.lastIndexOf('\\') + 1)
   })
-}) 
+})
 
 midjourneyBlendImgPath3.addEventListener('click', (e) => {
-  window.electronAPI.setMidjourneyBlendImg3Path().then(res => {
-    if (res) 
-      midjourneyBlendImgPath3Text.value = res
+  window.electronAPI.setMidjourneyBlendImgPath(3).then(res => {
+    if (res)
+      midjourneyBlendImgPath3Text.innerHTML = res.substring(res.lastIndexOf('\\') + 1)
   })
-}) 
+})
 
 midjourneyBlendImgPath4.addEventListener('click', (e) => {
-  window.electronAPI.setMidjourneyBlendImg4Path().then(res => {
-    if (res) 
-      midjourneyBlendImgPath4Text.value = res
+  window.electronAPI.setMidjourneyBlendImgPath(4).then(res => {
+    if (res)
+      midjourneyBlendImgPath4Text.innerHTML = res.substring(res.lastIndexOf('\\') + 1)
   })
-}) 
+})
 
 midjourneyBlendImgPath5.addEventListener('click', (e) => {
-  window.electronAPI.setMidjourneyBlendImg5Path().then(res => {
-    if (res) 
-      midjourneyBlendImgPath5Text.value = res
+  window.electronAPI.setMidjourneyBlendImgPath(5).then(res => {
+    if (res)
+      midjourneyBlendImgPath5Text.innerHTML = res.substring(res.lastIndexOf('\\') + 1)
   })
-}) 
+})
 
 midjourneyBlendStartButton.addEventListener('click', (e) => {
   window.electronAPI.startMidJourney(2);
-}) 
- 
+})
+
 midjourneyPromptLoadPromptsButton.addEventListener('click', (e) => {
   window.electronAPI.loadMidjourneyPrompts(e.target.value).then(res => {
-    if (res) 
+    if (res)
       midjourneyPromptBox.value = res
   })
-}) 
+})
 midjourneyPromptWaittime.addEventListener('change', (e) => {
   window.electronAPI.setMidjourneyPromptWaittime(e.target.value)
-}) 
+})
 midjourneyPromptSavepath.addEventListener('click', (e) => {
   window.electronAPI.setMidjourneyPromptSavepath().then(res => {
     console.log(res)
     if (res)
-      midjourneyPromptSavepathText.value = res
+      midjourneyPromptSavepathText.innerHTML = res.substring(res.lastIndexOf('\\') + 1)
   })
-}) 
+})
 
 midjourneyPromptStartButton.addEventListener('click', (e) => {
   window.electronAPI.startMidJourney(1);
-}) 
+})
 
 
 // SUPPORT FUNCTIONS
@@ -560,7 +579,7 @@ toggle between hiding and showing the dropdown content */
 //   console.log("My function")
 //     document.getElementById("myDropdown").classList.toggle("show");
 //   }
-  
+
 // Close the dropdown menu if the user clicks outside of it
 // window.onclick = function(event) {
 //   console.log("windows on click")
@@ -578,7 +597,7 @@ toggle between hiding and showing the dropdown content */
 
 function AddListItem(item) {
   var split = item.split('\\');
-  var filename = split[split.length -1];
+  var filename = split[split.length - 1];
   filename = filename.substring(0, filename.lastIndexOf('.'));
   var container = document.createElement('div')
   container.className = 'gen-container'
@@ -606,7 +625,7 @@ function AddListItem(item) {
 function AddPermutationItem(item) {
   console.log(item)
   var split = item.split('\\');
-  var filename = split[split.length -1];
+  var filename = split[split.length - 1];
   filename = filename.substring(0, filename.lastIndexOf('.'));
   var container = document.createElement('div')
   container.className = 'gen-container'
@@ -631,28 +650,28 @@ function AddPermutationItem(item) {
 }
 
 // Tabs logic
-window.addEventListener("load", function() {
-	// store tabs variable
-	// var myTabs = document.querySelectorAll("ul.nav-tabs > li");
+window.addEventListener("load", function () {
+  // store tabs variable
+  // var myTabs = document.querySelectorAll("ul.nav-tabs > li");
   // function myTabClicks(tabClickEvent) {
-	// 	for (var i = 0; i < myTabs.length; i++) {
-	// 		myTabs[i].classList.remove("active");
+  // 	for (var i = 0; i < myTabs.length; i++) {
+  // 		myTabs[i].classList.remove("active");
   //     myTabs[i].classList.replace("important-text", "reg-text");
-	// 	}
-	// 	var clickedTab = tabClickEvent.currentTarget;
-	// 	clickedTab.classList.add("active");
+  // 	}
+  // 	var clickedTab = tabClickEvent.currentTarget;
+  // 	clickedTab.classList.add("active");
   //   clickedTab.classList.replace("reg-text", "important-text");
-	// 	tabClickEvent.preventDefault();
-	// 	var myContentPanes = document.querySelectorAll(".tab-pane");
-	// 	for (i = 0; i < myContentPanes.length; i++) {
-	// 		myContentPanes[i].classList.remove("active");
-	// 	}
-	// 	var anchorReference = tabClickEvent.target;
-	// 	var activePaneId = anchorReference.getAttribute("href");
-	// 	var activePane = document.querySelector(activePaneId);
-	// 	activePane.classList.add("active");
-	// }
-	// for (i = 0; i < myTabs.length; i++) {
-	// 	myTabs[i].addEventListener("click", myTabClicks)
-	// }
+  // 	tabClickEvent.preventDefault();
+  // 	var myContentPanes = document.querySelectorAll(".tab-pane");
+  // 	for (i = 0; i < myContentPanes.length; i++) {
+  // 		myContentPanes[i].classList.remove("active");
+  // 	}
+  // 	var anchorReference = tabClickEvent.target;
+  // 	var activePaneId = anchorReference.getAttribute("href");
+  // 	var activePane = document.querySelector(activePaneId);
+  // 	activePane.classList.add("active");
+  // }
+  // for (i = 0; i < myTabs.length; i++) {
+  // 	myTabs[i].addEventListener("click", myTabClicks)
+  // }
 });
