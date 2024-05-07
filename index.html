@@ -27,19 +27,19 @@
     <div class="welcomebox">
       <div class="radiocontainer">
         <div>
-          <input type="radio" id="mainmenu-choice1" value='1' />
+          <input type="radio" id="mainmenu-choice1" value='1' name="menu" />
           <label htmlFor="prompt-choice" class="reg-text">Prompt Creation</label>
         </div>
         <div>
-          <input type="radio" id="mainmenu-choice2" value='2' />
+          <input type="radio" id="mainmenu-choice2" value='2' name="menu"/>
           <label htmlFor="midjourney-choice" class="reg-text">MidJourney</label>
         </div>
         <div>
-          <input type="radio" id="mainmenu-choice3" value='3' />
+          <input type="radio" id="mainmenu-choice3" value='3' name="menu"/>
           <label htmlFor="bing-choice" class="reg-text">Bing</label>
         </div>
         <div>
-          <input type="radio" id="mainmenu-choice4" value='4' />
+          <input type="radio" id="mainmenu-choice4" value='4' name="menu"/>
           <label htmlFor="gallery-choice" class="reg-text">Gallery</label>
         </div>
       </div>
@@ -51,9 +51,8 @@
     <!-- END OF HEADER -->
 
     <!-- CASE 1: PROMPT GENERATION-->
-    <div id="promptgen-page">
+    <div id="promptgen-page" class="page">
       <div class="promptcontainer">
-        <div class="reviewbox">
           <p class="reg-text bold nm">Generation</p>
           <p class="reg-text">This is where you generate new prompts</p>
           <div class="container--tabs">
@@ -64,7 +63,6 @@
               </ul>
               <div class="tab-content">
                 <div class="tab-pane" id="promptgen-random-tab">
-                  <div>
                     <p class="reg-text lul">Enter the text that you want to be used as a template and then add
                       references to either a filename by using the [filename] keyword, or enter a list manually by using
                       the {keyword} keyword. This will generate a file random combinations. feature. For examples,
@@ -92,7 +90,6 @@
                         <label htmlFor="save-generation" class="reg-text">Save generation prompt to file?</label>
                       </div>
                     </div>
-                  </div>
                 </div>
                 <div class="tab-pane" id="promptgen-combination-tab">
                   <div>
@@ -124,15 +121,19 @@
               </div>
             </section>
           </div>
-        </div>
       </div>
     </div>
     <!-- END OF PROMPT GENERATION -->
 
     <!-- CASE 2: MIDJOURNEY AND SUBSETS -->
-    <div id="midjourney-page">
+    <div id="midjourney-page" class="page">
       <div class="bingcontainer">
-        <div id="midjourney-navbar">
+          <div id="midjourney-navbar">
+            <button class='promptgen-tab' id='mj-tab-1'>Prompts</button>
+            <button class='promptgen-tab' id='mj-tab-2'>Blending</button>
+            <button class='promptgen-tab' id='mj-tab-3'>Descriptions</button>
+            <button class='promptgen-tab' id='mj-tab-4'>Settings</button>
+          </div>
           <div id="midjourney-prompts">
             <div class="reviewbox">
               <p class="reg-text bold nm">Prompts</p>
@@ -151,7 +152,7 @@
                 <label class="reg-text" htmlFor="midjourney-prompt-downloadpath-button">Image download path:</label>
                 <div class="buttonbox">
                   <button class="folderbutton" id="midjourney-prompt-downloadpath-button">Set</button>
-                  <p class="nm reg-text" id="midjourney-prompt-downloadpath-text">{savepath}</p>
+                  <p class="nm reg-text" id="midjourney-prompt-downloadpath-text"></p>
                 </div>
               </div>
               <div class="bingbutton-container">
@@ -317,13 +318,12 @@
               </div>
             </div>
           </div>
-        </div>
       </div>
     </div>
     <!-- END OF MIDJOURNEY -->
 
     <!-- CASE 3: BING -->
-    <div id="bing-page">
+    <div id="bing-page" class="page">
       <div class="bingcontainer">
         <p class="reg-text">This is a BETA-feature for generating and downloading images from Bing. As of now it uses
           the
@@ -351,7 +351,7 @@
           <label class="reg-text" htmlFor="bingfolder">Bing image download path:</label>
           <div class="buttonbox">
             <button class="folderbutton" id="bing-downloadpath-button">Set</button>
-            <p class="nm reg-text" id="bing-downloadpath-text">{path}</p>
+            <p class="nm reg-text" id="bing-downloadpath-text"></p>
           </div>
         </div>
         <div class="bingbutton-container">
@@ -362,7 +362,7 @@
     <!-- END OF BING-->
 
     <!-- CASE 4: ANALYSIS -->
-    <div id="analysispage">
+    <div id="analysispage" class="page">
       <!-- <div style={{display: 'flex' , flexDirection: 'column' }}>
         <AnalysisHeader />
         <div style={{display: 'flex' , flexDirection: 'row' }}>
@@ -377,7 +377,5 @@
   </div>
 
   <script src="./renderer.js"></script>
-  <script src="./pp.js"></script>
 </body>
-
 </html>

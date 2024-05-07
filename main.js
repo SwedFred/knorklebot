@@ -80,7 +80,6 @@ const createWindow = async () => {
   const getAssetPath = (...paths) => {
     return path.join(RESOURCES_PATH, ...paths);
   };
-
   mainWindow = new BrowserWindow({
     show: false,
     width: 1000,
@@ -93,9 +92,10 @@ const createWindow = async () => {
       contextIsolation: true,
       devTools: true,
       webSecurity: false,
-      preload: app.isPackaged
-        ? path.join(__dirname, 'preload.js')
-        : path.join(__dirname, '../../.erb/dll/preload.js'),
+      preload: path.join(__dirname, 'preload.js'),
+      // preload: app.isPackaged
+      //   ? path.join(__dirname, 'preload.js')
+      //   : path.join(__dirname, '../../.erb/dll/preload.js'),
     },
   });
 
@@ -148,6 +148,23 @@ app
       // On macOS it's common to re-create a window in the app when the
       // dock icon is clicked and there are no other windows open.
       if (mainWindow === null) createWindow();
+    });
+
+
+    // General 
+    ipcMain.on('change-page', (e,arg) => {
+      switch(arg) {
+        case 1:
+          mainWindow.webContents.send('promptgen-loaded', GetPromptGenData());
+          break
+        case 2:
+          mainWindow.webContents.send('midjourney-loaded', GetMidjourneyData());
+          break;
+        case 3:
+          mainWindow.webContents.send('bing-loaded', GetBingData());
+        case 4: 
+          break;
+      }   
     });
 
     ipcMain.handle('dialog:openDirectory', async () => {
@@ -247,7 +264,7 @@ ipcMain.on('update-page', (event,arg) => {mainWindow.webContents.send('page-upda
 ipcMain.on('help', (event, arg) => {shell.openExternal("https://www.youtube.com/channel/UCaCm9nJTmy-lHSGpBM7L6sg");})
 
 // Prompt gen
-ipcMain.on('promptgen-cache-prompt', (event, arg) => { settings.promptgen.saveprompt = arg; fs.writeFileSync(settingspath,JSON.stringify(settings));  })
+ipcMain.on('promptgen-save-promptfile', (event, arg) => { settings.promptgen.saveprompt = arg; fs.writeFileSync(settingspath,JSON.stringify(settings));  })
 ipcMain.on('promptgen-gen-amount', (event,arg) => {settings.promptgen.generation.count = arg; fs.writeFileSync(settingspath,JSON.stringify(settings));})
 ipcMain.on('filelistitem-perm-remove', (event,arg) => {
   settings.promptgen.generation.files.splice(settings.promptgen.generation.files.indexOf(arg), 1); 
@@ -260,7 +277,7 @@ ipcMain.on('filelistitem-gen-remove', (event,arg) => {
   mainWindow?.webContents.send('promptgen-filelist-load', settings.promptgen.generation.files);
 });
 
-ipcMain.handle('promptgen-gen-addfile', async () => {
+ipcMain.handle('promptgen-add-keywords-file', async () => {
   const { canceled, filePaths } = await dialog.showOpenDialog(mainWindow, {
     title: 'Add keywords file',
     properties: ['openFile'],
@@ -275,7 +292,7 @@ ipcMain.handle('promptgen-gen-addfile', async () => {
   }
 });
 
-ipcMain.handle('promptgen-perm-addfile', async () => {
+ipcMain.handle('promptgen-combination-add-keywords-file', async () => {
   const { canceled, filePaths } = await dialog.showOpenDialog(mainWindow, {
     title: 'Add keywords file',
     properties: ['openFile'],
@@ -290,7 +307,7 @@ ipcMain.handle('promptgen-perm-addfile', async () => {
   }
 });
 
-ipcMain.handle('promptgen-gen-open-prompt', async () => {
+ipcMain.handle('promptgen-load-gen-file', async () => {
   const { canceled, filePaths } = await dialog.showOpenDialog(mainWindow, {
     title: 'Open prompts file',
     properties: ['openFile'],
@@ -304,7 +321,7 @@ ipcMain.handle('promptgen-gen-open-prompt', async () => {
   }
 });
 
-ipcMain.handle('promptgen-perm-open-prompt', async () => {
+ipcMain.handle('promptgen-combination-load-gen-file', async () => {
   const { canceled, filePaths } = await dialog.showOpenDialog(mainWindow, {
     title: 'Open prompts file',
     properties: ['openFile'],
@@ -320,9 +337,8 @@ ipcMain.handle('promptgen-perm-open-prompt', async () => {
 });
 
 // General app start 
-ipcMain.on('login', (event, arg) => {  
-  console.log("Logged in")
-  switch(settings.selectedmode) {
+ipcMain.on('login', () => { 
+  switch(parseInt(settings.selectedmode)) {
     case 1:
       mainWindow.webContents.send('promptgen-loaded', GetPromptGenData());
       break
@@ -337,13 +353,10 @@ ipcMain.on('login', (event, arg) => {
  });
 
 // Bing
-ipcMain.handle('bing-loaded', async () => {
-  return GetBingData()
-})
-ipcMain.on('bing-email-update', (event, arg) => { settings.bing.email = arg; fs.writeFileSync(settingspath,JSON.stringify(settings));})
-ipcMain.on('bing-pass-update', (event, arg) => { settings.bing.password = arg; fs.writeFileSync(settingspath,JSON.stringify(settings));})
-ipcMain.on('bing-waittime-set', (event,arg) => {settings.bing.waittime = arg; fs.writeFileSync(settingspath,JSON.stringify(settings))})
-ipcMain.handle('bing-prompt-set', async () => {
+ipcMain.on('bing-set-email', (event, arg) => { settings.bing.email = arg; fs.writeFileSync(settingspath,JSON.stringify(settings));})
+ipcMain.on('bing-set-password', (event, arg) => { settings.bing.password = arg; fs.writeFileSync(settingspath,JSON.stringify(settings));})
+ipcMain.on('bing-set-waittime', (event,arg) => {settings.bing.waittime = arg; fs.writeFileSync(settingspath,JSON.stringify(settings))})
+ipcMain.handle('bing-loadprompts', async () => {
   const { canceled, filePaths } = await dialog.showOpenDialog(mainWindow, {
     title: 'Open prompts file',
     properties: ['openFile'],
@@ -359,7 +372,7 @@ ipcMain.handle('bing-prompt-set', async () => {
     return file;
   }
 });
-ipcMain.handle('bing-path-set', async () => {
+ipcMain.handle('bing-set-savepath', async () => {
   const { canceled, filePaths } = await dialog.showOpenDialog(mainWindow, {
     title: 'Select save directory',
     properties: ['openDirectory']
@@ -374,17 +387,13 @@ ipcMain.handle('bing-path-set', async () => {
 });
 
 // MidJourney - Add path checks when loading
-ipcMain.handle('midjourney-loaded', async () => {
-  return GetMidjourneyData()
-})
+ipcMain.on('midjourney-tab-clicked', (event, arg) => { settings.midjourney.selectedtab = arg; fs.writeFileSync(settingspath,JSON.stringify(settings));})
+ipcMain.on('midjourney-set-url', (event, arg) => { settings.midjourney.discordchaturl = arg; fs.writeFileSync(settingspath,JSON.stringify(settings));})
+ipcMain.on('midjourney-set-email', (event, arg) => { settings.midjourney.email = arg; fs.writeFileSync(settingspath,JSON.stringify(settings));})
+ipcMain.on('midjourney-set-password', (event, arg) => { settings.midjourney.password = arg; fs.writeFileSync(settingspath,JSON.stringify(settings));})
+ipcMain.on('midjourney-set-waittime', (event,arg) => {settings.midjourney.waittime = arg; fs.writeFileSync(settingspath,JSON.stringify(settings))})
 
-ipcMain.on('mj-set-tab', (event, arg) => { settings.midjourney.selectedtab = arg; fs.writeFileSync(settingspath,JSON.stringify(settings));})
-ipcMain.on('mj-url-update', (event, arg) => { settings.midjourney.discordchaturl = arg; fs.writeFileSync(settingspath,JSON.stringify(settings));})
-ipcMain.on('mj-email-update', (event, arg) => { settings.midjourney.email = arg; fs.writeFileSync(settingspath,JSON.stringify(settings));})
-ipcMain.on('mj-pass-update', (event, arg) => { settings.midjourney.password = arg; fs.writeFileSync(settingspath,JSON.stringify(settings));})
-ipcMain.on('mj-waittime-set', (event,arg) => {settings.midjourney.waittime = arg; fs.writeFileSync(settingspath,JSON.stringify(settings))})
-
-ipcMain.handle('mj-prompt-set', async () => {
+ipcMain.handle('midjourney-loadprompts', async () => {
   const { canceled, filePaths } = await dialog.showOpenDialog(mainWindow, {
     title: 'Open prompts file',
     properties: ['openFile'],
@@ -401,7 +410,7 @@ ipcMain.handle('mj-prompt-set', async () => {
   }
 });
 
-ipcMain.handle('mj-path-set', async () => {
+ipcMain.handle('midjourney-prompt-set-savepath', async () => {
   const { canceled, filePaths } = await dialog.showOpenDialog(mainWindow, {
     title: 'Select save directory',
     properties: ['openDirectory']
@@ -454,7 +463,7 @@ ipcMain.handle('mj-blend-img-set', async (event,val) => {
   }
 });
 
-ipcMain.handle('mj-describe-sourcepath-set', async () => {
+ipcMain.handle('midjourney-describe-set-sourcepath', async () => {
   const { canceled, filePaths } = await dialog.showOpenDialog(mainWindow, {
     title: 'Select source directory',
     properties: ['openDirectory']
@@ -468,7 +477,7 @@ ipcMain.handle('mj-describe-sourcepath-set', async () => {
   }
 });
 
-ipcMain.handle('mj-describe-savepath-set', async () => {
+ipcMain.handle('midjourney-describe-set-savepath', async () => {
   const { canceled, filePaths } = await dialog.showOpenDialog(mainWindow, {
     title: 'Select save directory',
     properties: ['openDirectory']
@@ -482,12 +491,13 @@ ipcMain.handle('mj-describe-savepath-set', async () => {
   }
 });
 
-ipcMain.on('mj-describe-interval-set', (event,arg) => {settings.midjourney.descriptions.interval = arg; fs.writeFileSync(settingspath,JSON.stringify(settings))})
-ipcMain.on('mj-saveprompts-set', (event,arg) => {settings.midjourney.descriptions.saveprompts = arg; fs.writeFileSync(settingspath,JSON.stringify(settings))})
-ipcMain.on('mj-savekeywords-set', (event,arg) => {settings.midjourney.descriptions.savekeywords = arg; fs.writeFileSync(settingspath,JSON.stringify(settings))})
-ipcMain.on('mj-savephrases-set', (event,arg) => {settings.midjourney.descriptions.savephrases = arg; fs.writeFileSync(settingspath,JSON.stringify(settings))})
-ipcMain.on('mj-saveartists-set', (event,arg) => {settings.midjourney.descriptions.saveartists = arg; fs.writeFileSync(settingspath,JSON.stringify(settings))})
-ipcMain.on('mj-saveweights-set', (event,arg) => {settings.midjourney.descriptions.saveweights = arg; fs.writeFileSync(settingspath,JSON.stringify(settings))})
+ipcMain.on('midjourney-describe-waittime', (event,arg) => {settings.midjourney.descriptions.interval = arg; fs.writeFileSync(settingspath,JSON.stringify(settings))})
+ipcMain.on('midjourney-describe-saveprompts', (event,arg) => {settings.midjourney.descriptions.saveprompts = arg; fs.writeFileSync(settingspath,JSON.stringify(settings))})
+ipcMain.on('midjourney-describe-savekeywords', (event,arg) => {settings.midjourney.descriptions.savekeywords = arg; fs.writeFileSync(settingspath,JSON.stringify(settings))})
+ipcMain.on('midjourney-describe-savephrases', (event,arg) => {settings.midjourney.descriptions.savephrases = arg; fs.writeFileSync(settingspath,JSON.stringify(settings))})
+ipcMain.on('midjourney-describe-saveartists', (event,arg) => {settings.midjourney.descriptions.saveartists = arg; fs.writeFileSync(settingspath,JSON.stringify(settings))})
+ipcMain.on('midjourney-describe-saveweights', (event,arg) => {settings.midjourney.descriptions.saveweights = arg; fs.writeFileSync(settingspath,JSON.stringify(settings))})
+ipcMain.on('promptgen-tab-selected', (event,arg) => {settings.promptgen.menuchoice = arg; fs.writeFileSync(settingspath,JSON.stringify(settings))})
 
 
 // End
@@ -516,19 +526,20 @@ ipcMain.on('bing-start', (event, arg) => {
   } catch(ex) {console.log(ex)}
 });
 
- ipcMain.on('remove-listfile', (event, arg) => {
+ ipcMain.on('promptgen-removelistfile', (event, arg) => {
   settings.promptgen.generation.files.splice(arg,1)
   fs.writeFileSync(settingspath,JSON.stringify(settings));
   mainWindow?.webContents.send('promptgen-filelist-load', settings.promptgen.generation.files)
  });
 
- ipcMain.on('remove-permutationfile', (event, arg) => {
+ ipcMain.on('promptgen-combination-removelistfile', (event, arg) => {
   settings.promptgen.permutations.files.splice(arg,1)
   fs.writeFileSync(settingspath,JSON.stringify(settings));
-  mainWindow?.webContents.send('promptgen-permlist-load', settings.promptgen.permutations.files)
+  mainWindow?.webContents.send('promptgen-combination-filelist-load', settings.promptgen.permutations.files)
  });
 
  ipcMain.on('promptgen-generate', async (event, arg) => {
+  console.log(arg)
   let arr = []
   for(var j = 0; j < settings.promptgen.generation.count; j++)
   {
@@ -688,9 +699,8 @@ ipcMain.on('bing-start', (event, arg) => {
  })
 
  // Helper functions
-
  const GetPromptGenData = () => {
-  var promptgenSettings = {cache: settings.promptgen.saveprompt, generations: settings.promptgen.generation.count, genfiles: settings.promptgen.generation.files, permfiles: settings.promptgen.permutations.files};
+  var promptgenSettings = {menuChoice: settings.promptgen.menuchoice, cache: settings.promptgen.saveprompt, generations: settings.promptgen.generation.count, genfiles: settings.promptgen.generation.files, permfiles: settings.promptgen.permutations.files};
   return promptgenSettings;
  }
 
@@ -705,42 +715,44 @@ ipcMain.on('bing-start', (event, arg) => {
  }
 
  const GetMidjourneyData = () => {
-  var file = '';
-  var spath = '';
-  if (settings.midjourney.promptpath !== '')
-    file = fs.readFileSync(settings.midjourney.promptpath, 'utf-8');
-  if (fs.existsSync(settings.midjourney.savepath))
-    spath = settings.midjourney.savepath
-  return {  pass: settings.midjourney.password, 
-            email: settings.midjourney.email, 
-            discordchaturl: settings.midjourney.discordchaturl,
-            path: spath,
-            prompt: file,
-            selectedtab: settings.midjourney.selectedtab, 
-            waittime: settings.midjourney.waittime,
-            blends: {
-              img1source: settings.midjourney.blends.img1source,
-              img2source: settings.midjourney.blends.img2source,
-              img3source: settings.midjourney.blends.img3source,
-              img4source: settings.midjourney.blends.img4source,
-              img5source: settings.midjourney.blends.img5source,
-              blendnum: settings.midjourney.blends.blendnum,
-              aspect:settings.midjourney.blends.aspect,
-              savepath:settings.midjourney.blends.savepath,
-              loops: settings.midjourney.blends.loops,
-              waittime: settings.midjourney.blends.waittime
-            },
-            describe: {
-              interval: settings.midjourney.descriptions.interval,
-              sourcepath:settings.midjourney.descriptions.sourcepath,
-              savepath:settings.midjourney.descriptions.savepath,
-              saveprompts:settings.midjourney.descriptions.saveprompts,
-              savekeywords:settings.midjourney.descriptions.savekeywords,
-              saveartists:settings.midjourney.descriptions.saveartists,
-              saveweights:settings.midjourney.descriptions.saveweights,
-              savephrases:settings.midjourney.descriptions.savephrases
+  try {
+    var file = '';
+    var spath = '';
+    if (settings.midjourney.promptpath !== '')
+      file = fs.readFileSync(settings.midjourney.promptpath, 'utf-8');
+    if (fs.existsSync(settings.midjourney.savepath))
+      spath = settings.midjourney.savepath
+    return {  password: settings.midjourney.password, 
+              email: settings.midjourney.email, 
+              url: settings.midjourney.discordchaturl,
+              savepath: spath,
+              promptpath: file,
+              selectedtab: settings.midjourney.selectedtab, 
+              waittime: settings.midjourney.waittime,
+              blends: {
+                img1source: settings.midjourney.blends.img1source,
+                img2source: settings.midjourney.blends.img2source,
+                img3source: settings.midjourney.blends.img3source,
+                img4source: settings.midjourney.blends.img4source,
+                img5source: settings.midjourney.blends.img5source,
+                blendnum: settings.midjourney.blends.blendnum,
+                aspect:settings.midjourney.blends.aspect,
+                savepath:settings.midjourney.blends.savepath,
+                loops: settings.midjourney.blends.loops,
+                waittime: settings.midjourney.blends.waittime
+              },
+              describe: {
+                waittime: settings.midjourney.descriptions.interval,
+                sourcepath:settings.midjourney.descriptions.sourcepath,
+                savepath:settings.midjourney.descriptions.savepath,
+                saveprompts:settings.midjourney.descriptions.saveprompts,
+                savekeywords:settings.midjourney.descriptions.savekeywords,
+                saveartists:settings.midjourney.descriptions.saveartists,
+                saveweights:settings.midjourney.descriptions.saveweights,
+                savephrases:settings.midjourney.descriptions.savephrases
+              }
             }
-          }
+  } catch(err) { console.log(err); return null;}
  }
 
 const SavePrompt = (filePath, prompt) => {

@@ -55,6 +55,7 @@ body {
 
 #main-page {
   display: none;  
+  flex-direction: column;
 }
 
 #loginwindow {
@@ -202,12 +203,20 @@ body {
   height: 24px;
 }
 
+.page {
+  display: flex;
+    flex-direction: column;
+    background-color: var(--static11);
+  padding: 0.5rem;
+}
+
 .folderbutton {
   width: 100px; 
   height: 24px;
 }
 
 .promptbox {
+  width: 100%;
   height: 100px;
 }
 
@@ -614,14 +623,16 @@ width: 100px;
     width: 100%;
  }
   .container--tabs .tab-content > .tab-pane {
-    display: none;
+    flex-direction: column;
  }
   .container--tabs .tab-content > .tab-pane.active {
     display: flex;
+    flex-direction: column;
     padding: 2.5% 3.5%;
  }
   .container--tabs .tab-content > .active {
     display: flex;
+    flex-direction: column;
  }
 
 .input-wrapper {

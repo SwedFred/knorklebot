@@ -50,6 +50,10 @@ const midjourneyPrompts = document.getElementById('midjourney-prompts')
 const midjourneyBlending = document.getElementById('midjourney-blending')
 const midjourneyDescriptions = document.getElementById('midjourney-descriptions')
 const midjourneySetup = document.getElementById('midjourney-setup')
+const midjourneyTab1 = document.getElementById('mj-tab-1')
+const midjourneyTab2 = document.getElementById('mj-tab-2')
+const midjourneyTab3 = document.getElementById('mj-tab-3')
+const midjourneyTab4 = document.getElementById('mj-tab-4')
 const midjourneyEmail = document.getElementById('midjourney-email')
 const midjourneyPassword = document.getElementById('midjourney-password')
 const midjourneyUrl = document.getElementById('midjourney-url')
@@ -91,26 +95,135 @@ const midjourneyPromptStartButton = document.getElementById('midjourney-prompt-s
 
 
 // Events
+const LoggedIn = () => {
+  mainWindow.style.display = 'flex'
+  loginwindow.style.display = 'none'
+}
+
+const SetPageVisibility = (val) => {
+  switch(val) {
+    case 1: 
+      promptgenPage.style.display = 'flex'
+      bingPage.style.display = 'none'
+      midjourneyPage.style.display = 'none'
+      setMainMenuChoice1.checked = true
+      setMainMenuChoice2.checked = false
+      setMainMenuChoice3.checked = false
+      setMainMenuChoice4.checked = false
+      break;
+    case 2:
+      promptgenPage.style.display = 'none'
+      bingPage.style.display = 'none'
+      midjourneyPage.style.display = 'flex'
+      setMainMenuChoice1.checked = false
+      setMainMenuChoice2.checked = true
+      setMainMenuChoice3.checked = false
+      setMainMenuChoice4.checked = false
+      break;
+    case 3:
+      promptgenPage.style.display = 'none'
+      bingPage.style.display = 'flex'
+      midjourneyPage.style.display = 'none'
+      setMainMenuChoice1.checked = false
+      setMainMenuChoice2.checked = false
+      setMainMenuChoice3.checked = true
+      setMainMenuChoice4.checked = false
+      break;
+    default:
+      console.log("fail")
+      promptgenPage.style.display = 'none'
+      bingPage.style.display = 'none'
+      midjourneyPage.style.display = 'none'
+      setMainMenuChoice1.checked = false
+      setMainMenuChoice2.checked = false
+      setMainMenuChoice3.checked = false
+      setMainMenuChoice4.checked = true
+      break;
+  }
+}
+
+const SetMidJourneyTabVisibility = (val) => {
+  switch(val) {
+    case 1:
+      midjourneyTab1.classList.remove('inactive')
+      midjourneyTab1.classList.add('active')
+      midjourneyTab2.classList.remove('active')
+      midjourneyTab3.classList.remove('active')
+      midjourneyTab4.classList.remove('active')
+      midjourneyTab2.classList.add('inactive')
+      midjourneyTab3.classList.add('inactive')
+      midjourneyTab4.classList.add('inactive')
+      midjourneyPrompts.style.display = 'flex'
+      midjourneyBlending.style.display = 'none'
+      midjourneyDescriptions.style.display = 'none'
+      midjourneySetup.style.display = 'none'
+      break;
+    case 2:
+      midjourneyTab1.classList.remove('active')
+      midjourneyTab1.classList.add('inactive')
+      midjourneyTab2.classList.remove('inactive')
+      midjourneyTab3.classList.remove('active')
+      midjourneyTab4.classList.remove('active')
+      midjourneyTab2.classList.add('active')
+      midjourneyTab3.classList.add('inactive')
+      midjourneyTab4.classList.add('inactive')
+      midjourneyPrompts.style.display = 'none'
+      midjourneyBlending.style.display = 'flex'
+      midjourneyDescriptions.style.display = 'none'
+      midjourneySetup.style.display = 'none'
+      break;
+    case 3:
+      midjourneyTab1.classList.remove('active')
+      midjourneyTab1.classList.add('inactive')
+      midjourneyTab2.classList.remove('active')
+      midjourneyTab3.classList.remove('inactive')
+      midjourneyTab4.classList.remove('active')
+      midjourneyTab2.classList.add('inactive')
+      midjourneyTab3.classList.add('active')
+      midjourneyTab4.classList.add('inactive')
+      midjourneyPrompts.style.display = 'none'
+      midjourneyBlending.style.display = 'none'
+      midjourneyDescriptions.style.display = 'flex'
+      midjourneySetup.style.display = 'none'
+      break;
+    case 4:
+      midjourneyTab1.classList.remove('active')
+      midjourneyTab1.classList.add('inactive')
+      midjourneyTab2.classList.remove('active')
+      midjourneyTab3.classList.remove('active')
+      midjourneyTab4.classList.remove('inactive')
+      midjourneyTab2.classList.add('inactive')
+      midjourneyTab3.classList.add('inactive')
+      midjourneyTab4.classList.add('active')
+      midjourneyPrompts.style.display = 'none'
+      midjourneyBlending.style.display = 'none'
+      midjourneyDescriptions.style.display = 'none'
+      midjourneySetup.style.display = 'flex'
+      break;
+    default:
+      console.log("fail")
+      break;
+  }
+}
+
 
 // Login
 loginbutton.addEventListener('click', () => { // Log in, close the welcome screen
-  console.log("logging in...")
   window.electronAPI.login();
-  loginwindow.style.display = "none";
-  mainWindow.style.display = "flex";
+  LoggedIn();
 })
 
 // Navigation Header
 setMainMenuChoice1.addEventListener('click', () => {
   window.electronAPI.mainmenuChoice(1);
 })
-setMainMenuChoice1.addEventListener('click', () => {
+setMainMenuChoice2.addEventListener('click', () => {
   window.electronAPI.mainmenuChoice(2);
 })
-setMainMenuChoice1.addEventListener('click', () => {
+setMainMenuChoice3.addEventListener('click', () => {
   window.electronAPI.mainmenuChoice(3);
 })
-setMainMenuChoice1.addEventListener('click', () => {
+setMainMenuChoice4.addEventListener('click', () => {
   window.electronAPI.mainmenuChoice(4);
 })
 helpbutton.addEventListener('click', () => {
@@ -119,37 +232,75 @@ helpbutton.addEventListener('click', () => {
 
 // Prompt page
 window.electronAPI.promptgenLoaded((e, data) => {
+  console.log(data)
   promptgenPage.style.display = 'flex'
   bingPage.style.display = 'none'
   midjourneyPage.style.display = 'none'
   analysispage.style.display = 'none'
   if (data.menuChoice === 0) {
-    promptgenTab1Content.style.display === 'flex'
-    promptgenTab2Content.style.display === 'none'
+    promptgenTab1.classList.add("active")
+    promptgenTab1.classList.remove("inactive")
+    promptgenTab2.classList.remove("active")
+    promptgenTab2.classList.add("inactive")
+    promptgenTab1Content.style.display = 'flex'
+    promptgenTab2Content.style.display = 'none'
   } else {
-    promptgenTab1Content.style.display === 'none'
-    promptgenTab2Content.style.display === 'flex'
+    promptgenTab1.classList.add("inactive")
+    promptgenTab1.classList.remove("active")
+    promptgenTab2.classList.add("active")
+    promptgenTab2.classList.remove("inactive")
+    promptgenTab1Content.style.display = 'none'
+    promptgenTab2Content.style.display = 'flex'
   }
-  promptgenShouldSaveGenFile1.checked === data.saveprompt;
-  promptgenShouldSaveGenFile2.checked === data.saveprompt;
-  promptgenPromptCount.value = data.generation.count
-  for(var i = 0; i < data.generation.files.length; i++) {
+  promptgenShouldSaveGenFile1.checked === data.cache;
+  promptgenShouldSaveGenFile2.checked === data.cache;
+  promptgenPromptCount.value = data.generations
+  for(var i = 0; i < data.genfiles.length; i++) {
     // Add elements for each added file
   }
-  for(var i = 0; i < data.permutations.files.length; i++) {
+  for(var i = 0; i < data.permfiles.length; i++) {
     // Add elements for each added file
   }
+  SetPageVisibility(1);
 })
 
 promptgenTab1.addEventListener('click', () => {
   window.electronAPI.promptgenMenuChoice(0);
-  promptgenTab1Content.style.display === 'flex'
-  promptgenTab2Content.style.display === 'none'
+  promptgenTab1.classList.add("active")
+  promptgenTab1.classList.remove("inactive")
+  promptgenTab2.classList.add("inactive")
+  promptgenTab2.classList.remove("active")
+  promptgenTab1Content.style.display = 'flex'
+  promptgenTab2Content.style.display = 'none'
 })
 promptgenTab2.addEventListener('click', () => {
   window.electronAPI.promptgenMenuChoice(1);
-  promptgenTab1Content.style.display === 'none'
-  promptgenTab2Content.style.display === 'flex'
+  promptgenTab1.classList.add("inactive")
+  promptgenTab1.classList.remove("active")
+  promptgenTab2.classList.add("active")
+  promptgenTab2.classList.remove("inactive")
+  promptgenTab1Content.style.display = 'none'
+  promptgenTab2Content.style.display = 'flex'
+})
+
+midjourneyTab1.addEventListener('click', () => {
+  window.electronAPI.midjourneyTabChoice(1);
+  SetMidJourneyTabVisibility(1);
+})
+
+midjourneyTab2.addEventListener('click', () => {
+  window.electronAPI.midjourneyTabChoice(2);
+  SetMidJourneyTabVisibility(2);
+})
+
+midjourneyTab3.addEventListener('click', () => {
+  window.electronAPI.midjourneyTabChoice(3);
+  SetMidJourneyTabVisibility(3);
+})
+
+midjourneyTab4.addEventListener('click', () => {
+  window.electronAPI.midjourneyTabChoice(4);
+  SetMidJourneyTabVisibility(4);
 })
 
 promptgenAddFileButton.addEventListener('click', () => {
@@ -161,9 +312,15 @@ promptgenGenerateButton.addEventListener('click', () => {
   window.electronAPI.promptgenGenerate(promptgenPromptbox.value);
 })
 promptgenOpenFileButton.addEventListener('click', () => {
-  window.electronAPI.promptgenLoadGenFile()
+  window.electronAPI.promptgenLoadGenFile().then(res => {
+    if (res)
+      promptgenPromptbox.value = res
+  })
 })
-promptgenPromptCount
+promptgenPromptCount.addEventListener('change', (e) => {
+  window.electronAPI.promptgenSetCount(e.target.value);
+})
+
 promptgenShouldSaveGenFile1.addEventListener('click', (e) => {
   window.electronAPI.setShouldSaveGenFile(e.target.checked)
 })
@@ -177,15 +334,26 @@ promptgenCombinationGenerateButton.addEventListener('click', () => {
   window.electronAPI.promptgenCombinationGenerate(promptgenCombintationbox.value);
 })
 promptgenCombinationOpenFileButton.addEventListener('click', () => {
-  window.electronAPI.promptgenLoadCombinationGenFile()
+  window.electronAPI.promptgenLoadCombinationGenFile().then(res => {
+    if (res)
+      promptgenCombintationbox.value = res
+  })
 })
+window.electronAPI.promptgenLoadCombinationFileList((e,data) => {
+  console.log("IMPLEMENT THIS")
+})
+
+window.electronAPI.promptgenLoadFileList((e,data) => {
+  console.log("IMPLEMENT THIS")
+})
+
 promptgenShouldSaveGenFile2.addEventListener('click', () => {
   window.electronAPI.setShouldSaveGenFile(e.target.checked)
 })
 
 
 // Bing page 
-window.electronAPI.bingLoaded((e, data) => {
+window.electronAPI.bingLoaded((event,data) => {
   promptgenPage.style.display = 'none'
   bingPage.style.display = 'none'
   midjourneyPage.style.display = 'flex'
@@ -196,6 +364,7 @@ window.electronAPI.bingLoaded((e, data) => {
   bingEmailInput.value = data.email;
   bingPasswordInput.value = data.password;
   bingDownloadPathText.value = data.savePath;
+  SetPageVisibility(3);
 })
 bingLoadpromptsButton.addEventListener('click', () => {
   window.electronAPI.bingLoadPrompts().then(res => {
@@ -223,66 +392,40 @@ bingStartButton.addEventListener('click', () => {
 
 // MidJourney
 
-window.electronAPI.midjourneyLoaded((e, data) => {
-  switch(data.selectedTab) {
-    case 0:
-      midjourneyPrompts.style.display = 'flex'
-      midjourneyBlending.style.display = 'none'
-      midjourneyDescriptions.style.display = 'none' 
-      midjourneySetup.style.display = 'none'
-      break;
-    case 1:
-      midjourneyPrompts.style.display = 'none'
-      midjourneyBlending.style.display = 'flex'
-      midjourneyDescriptions.style.display = 'none' 
-      midjourneySetup.style.display = 'none'
-      break;
-    case 2:
-      midjourneyPrompts.style.display = 'none'
-      midjourneyBlending.style.display = 'none'
-      midjourneyDescriptions.style.display = 'flex' 
-      midjourneySetup.style.display = 'none'
-      break;
-    case 3:
-      midjourneyPrompts.style.display = 'none'
-      midjourneyBlending.style.display = 'none'
-      midjourneyDescriptions.style.display = 'none' 
-      midjourneySetup.style.display = 'flex'
-      break;
-    default:
-      midjourneyPrompts.style.display = 'flex'
-      midjourneyBlending.style.display = 'none'
-      midjourneyDescriptions.style.display = 'none' 
-      midjourneySetup.style.display = 'none'
-  }
+window.electronAPI.midjourneyLoaded((event, data) => {
+  try {
 
-  midjourneyEmail.value = data.email; 
-  midjourneyPassword.value = data.password; 
-  midjourneyUrl.value = data.url; 
-
-  midjourneyDescribeWaittime.value = data.describe.waittime;
-  midjourneyDescribeSavefolderText.value = data.describe.savepath;
-  midjourneyDescribeSavePhrases.checked = data.describe.savephrases 
-  midjourneyDescribeSavePrompts.checked = data.describe.saveprompts
-  midjourneyDescribeSaveKeywords.checked = data.describe.savekeywords 
-  midjourneyDescribeSaveArtists.checked = data.describe.saveartists
-  midjourneyDescribeSaveWeights.checked = data.describe.saveweights
-  midjourneyDescribeSourcefolderText.value = data.describe.sourcepath
-
-  midjourneyBlendLoops.value = data.blend.loops 
-  midjourneyBlendWaittimeText.value = data.blend.waittime
-  midjourneyBlendSavepathText.value = data.blend.savepath
-  midjourneyBlendAspectratio.value = data.blend.aspectratio
-  midjourneyBlendNumberOfBlends.value = data.blend.numblends
-  midjourneyBlendImgPath1Text.value = data.blend.img1path
-  midjourneyBlendImgPath2Text.value = data.blend.img2path 
-  midjourneyBlendImgPath3Text.value = data.blend.img3path 
-  midjourneyBlendImgPath4Text.value = data.blend.img4path
-  midjourneyBlendImgPath5Text.value = data.blend.img5path
-
-  midjourneyPromptBox.value = data.promptpath
-  midjourneyPromptWaittime.value = data.waittime
-  midjourneyPromptSavepathText.value = data.savepath
+    SetMidJourneyTabVisibility(parseInt(data.selectedtab))
+  
+    midjourneyEmail.value = data.email; 
+    midjourneyPassword.value = data.password; 
+    midjourneyUrl.value = data.url; 
+  
+    midjourneyDescribeWaittime.value = data.describe.waittime;
+    midjourneyDescribeSavefolderText.value = data.describe.savepath;
+    midjourneyDescribeSavePhrases.checked = data.describe.savephrases 
+    midjourneyDescribeSavePrompts.checked = data.describe.saveprompts
+    midjourneyDescribeSaveKeywords.checked = data.describe.savekeywords 
+    midjourneyDescribeSaveArtists.checked = data.describe.saveartists
+    midjourneyDescribeSaveWeights.checked = data.describe.saveweights
+    midjourneyDescribeSourcefolderText.value = data.describe.sourcepath
+  
+    midjourneyBlendLoops.value = data.blends.loops 
+    midjourneyBlendWaittimeText.value = data.blends.waittime
+    midjourneyBlendSavepathText.value = data.blends.savepath
+    midjourneyBlendAspectratio.value = data.blends.aspect
+    midjourneyBlendNumberOfBlends.value = data.blends.blendnum
+    midjourneyBlendImgPath1Text.value = data.blends.img1source
+    midjourneyBlendImgPath2Text.value = data.blends.img2source
+    midjourneyBlendImgPath3Text.value = data.blends.img3source 
+    midjourneyBlendImgPath4Text.value = data.blends.img4source
+    midjourneyBlendImgPath5Text.value = data.blends.img5source
+  
+    midjourneyPromptBox.value = data.promptpath
+    midjourneyPromptWaittime.value = data.waittime
+    midjourneyPromptSavepathText.value = data.savepath
+    SetPageVisibility(2);
+  }catch(err) {console.log(err)}
 })
 
 midjourneyEmail.addEventListener('change', (e) => {
@@ -332,7 +475,7 @@ midjourneyDescribeStartbutton.addEventListener('click', (e) => {
 })  
 midjourneyBlendWaittime.addEventListener('click', (e) => {
   window.electronAPI.setMidjourneyBlendWaittime(e.target.value)
-  midjourneyBlendWaittimeText.value = int(midjourneyBlendLoops.value) * e.target.value;
+  midjourneyBlendWaittimeText.value = parseInt(midjourneyBlendLoops.value) * e.target.value;
 }) 
 midjourneyBlendSavepath.addEventListener('click', (e) => {
   window.electronAPI.setMidjourneyBlendSavepath().then(res => {
@@ -349,35 +492,35 @@ midjourneyBlendNumberOfBlends.addEventListener('change', (e) => {
   window.electronAPI.setMidjourneyBlendNumblends(e.target.value)
 }) 
 midjourneyBlendImgPath1.addEventListener('click', (e) => {
-  window.electronAPI.setMidjourneyBlendImg1Path(e.target.value).then(res => {
+  window.electronAPI.setMidjourneyBlendImg1Path().then(res => {
     if (res) 
       midjourneyBlendImgPath1Text.value = res
   })
 }) 
  
 midjourneyBlendImgPath2.addEventListener('click', (e) => {
-  window.electronAPI.setMidjourneyBlendImg2Path(e.target.value).then(res => {
+  window.electronAPI.setMidjourneyBlendImg2Path().then(res => {
     if (res) 
       midjourneyBlendImgPath2Text.value = res
   })
 }) 
 
 midjourneyBlendImgPath3.addEventListener('click', (e) => {
-  window.electronAPI.setMidjourneyBlendImg3Path(e.target.value).then(res => {
+  window.electronAPI.setMidjourneyBlendImg3Path().then(res => {
     if (res) 
       midjourneyBlendImgPath3Text.value = res
   })
 }) 
 
 midjourneyBlendImgPath4.addEventListener('click', (e) => {
-  window.electronAPI.setMidjourneyBlendImg4Path(e.target.value).then(res => {
+  window.electronAPI.setMidjourneyBlendImg4Path().then(res => {
     if (res) 
       midjourneyBlendImgPath4Text.value = res
   })
 }) 
 
 midjourneyBlendImgPath5.addEventListener('click', (e) => {
-  window.electronAPI.setMidjourneyBlendImg5Path(e.target.value).then(res => {
+  window.electronAPI.setMidjourneyBlendImg5Path().then(res => {
     if (res) 
       midjourneyBlendImgPath5Text.value = res
   })
@@ -390,7 +533,7 @@ midjourneyBlendStartButton.addEventListener('click', (e) => {
 midjourneyPromptLoadPromptsButton.addEventListener('click', (e) => {
   window.electronAPI.loadMidjourneyPrompts(e.target.value).then(res => {
     if (res) 
-    midjourneyPromptBox.value = res
+      midjourneyPromptBox.value = res
   })
 }) 
 midjourneyPromptWaittime.addEventListener('change', (e) => {
@@ -398,6 +541,7 @@ midjourneyPromptWaittime.addEventListener('change', (e) => {
 }) 
 midjourneyPromptSavepath.addEventListener('click', (e) => {
   window.electronAPI.setMidjourneyPromptSavepath().then(res => {
+    console.log(res)
     if (res)
       midjourneyPromptSavepathText.value = res
   })
@@ -412,23 +556,25 @@ midjourneyPromptStartButton.addEventListener('click', (e) => {
 
 /* When the user clicks on the button,
 toggle between hiding and showing the dropdown content */
-function myFunction() {
-    document.getElementById("myDropdown").classList.toggle("show");
-  }
+// function myFunction() {
+//   console.log("My function")
+//     document.getElementById("myDropdown").classList.toggle("show");
+//   }
   
 // Close the dropdown menu if the user clicks outside of it
-window.onclick = function(event) {
-  if (!event.target.matches('.dropbtn')) {
-    var dropdowns = document.getElementsByClassName("dropdown-content");
-    var i;
-    for (i = 0; i < dropdowns.length; i++) {
-      var openDropdown = dropdowns[i];
-      if (openDropdown.classList.contains('show')) {
-        openDropdown.classList.remove('show');
-      }
-    }
-  }
-}
+// window.onclick = function(event) {
+//   console.log("windows on click")
+//   if (!event.target.matches('.dropbtn')) {
+//     var dropdowns = document.getElementsByClassName("dropdown-content");
+//     var i;
+//     for (i = 0; i < dropdowns.length; i++) {
+//       var openDropdown = dropdowns[i];
+//       if (openDropdown.classList.contains('show')) {
+//         openDropdown.classList.remove('show');
+//       }
+//     }
+//   }
+// }
 
 function AddListItem(item) {
   var split = item.split('\\');
@@ -487,26 +633,26 @@ function AddPermutationItem(item) {
 // Tabs logic
 window.addEventListener("load", function() {
 	// store tabs variable
-	var myTabs = document.querySelectorAll("ul.nav-tabs > li");
-  function myTabClicks(tabClickEvent) {
-		for (var i = 0; i < myTabs.length; i++) {
-			myTabs[i].classList.remove("active");
-      myTabs[i].classList.replace("important-text", "reg-text");
-		}
-		var clickedTab = tabClickEvent.currentTarget;
-		clickedTab.classList.add("active");
-    clickedTab.classList.replace("reg-text", "important-text");
-		tabClickEvent.preventDefault();
-		var myContentPanes = document.querySelectorAll(".tab-pane");
-		for (i = 0; i < myContentPanes.length; i++) {
-			myContentPanes[i].classList.remove("active");
-		}
-		var anchorReference = tabClickEvent.target;
-		var activePaneId = anchorReference.getAttribute("href");
-		var activePane = document.querySelector(activePaneId);
-		activePane.classList.add("active");
-	}
-	for (i = 0; i < myTabs.length; i++) {
-		myTabs[i].addEventListener("click", myTabClicks)
-	}
+	// var myTabs = document.querySelectorAll("ul.nav-tabs > li");
+  // function myTabClicks(tabClickEvent) {
+	// 	for (var i = 0; i < myTabs.length; i++) {
+	// 		myTabs[i].classList.remove("active");
+  //     myTabs[i].classList.replace("important-text", "reg-text");
+	// 	}
+	// 	var clickedTab = tabClickEvent.currentTarget;
+	// 	clickedTab.classList.add("active");
+  //   clickedTab.classList.replace("reg-text", "important-text");
+	// 	tabClickEvent.preventDefault();
+	// 	var myContentPanes = document.querySelectorAll(".tab-pane");
+	// 	for (i = 0; i < myContentPanes.length; i++) {
+	// 		myContentPanes[i].classList.remove("active");
+	// 	}
+	// 	var anchorReference = tabClickEvent.target;
+	// 	var activePaneId = anchorReference.getAttribute("href");
+	// 	var activePane = document.querySelector(activePaneId);
+	// 	activePane.classList.add("active");
+	// }
+	// for (i = 0; i < myTabs.length; i++) {
+	// 	myTabs[i].addEventListener("click", myTabClicks)
+	// }
 });
