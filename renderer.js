@@ -11,7 +11,13 @@ const setMainMenuChoice1 = document.getElementById('mainmenu-choice1')
 const setMainMenuChoice2 = document.getElementById('mainmenu-choice2')
 const setMainMenuChoice3 = document.getElementById('mainmenu-choice3')
 const setMainMenuChoice4 = document.getElementById('mainmenu-choice4')
+const setMainMenuChoice5 = document.getElementById('mainmenu-choice5')
 const helpbutton = document.getElementById('helpbtn')
+
+// Chrome setup
+const chromeSetupPage = document.getElementById('chromesetuppage')
+const chromepathButton = document.getElementById('chromepath-button')
+const chromepathText = document.getElementById('chromepage-text')
 
 // Prompt gen page
 const promptgenPage = document.getElementById('promptgen-page')
@@ -106,38 +112,57 @@ const SetPageVisibility = (val) => {
       promptgenPage.style.display = 'flex'
       bingPage.style.display = 'none'
       midjourneyPage.style.display = 'none'
+      chromeSetupPage.style.display = 'none'
       setMainMenuChoice1.checked = true
       setMainMenuChoice2.checked = false
       setMainMenuChoice3.checked = false
-      setMainMenuChoice4.checked = false
+      //setMainMenuChoice4.checked = false
+      setMainMenuChoice5.checked = false
       break;
     case 2:
       promptgenPage.style.display = 'none'
       bingPage.style.display = 'none'
       midjourneyPage.style.display = 'flex'
+      chromeSetupPage.style.display = 'none'
       setMainMenuChoice1.checked = false
       setMainMenuChoice2.checked = true
       setMainMenuChoice3.checked = false
-      setMainMenuChoice4.checked = false
+      //setMainMenuChoice4.checked = false
+      setMainMenuChoice5.checked = false
       break;
     case 3:
       promptgenPage.style.display = 'none'
       bingPage.style.display = 'flex'
       midjourneyPage.style.display = 'none'
+      chromeSetupPage.style.display = 'none'
       setMainMenuChoice1.checked = false
       setMainMenuChoice2.checked = false
       setMainMenuChoice3.checked = true
-      setMainMenuChoice4.checked = false
+      //setMainMenuChoice4.checked = false
+      setMainMenuChoice5.checked = false
       break;
+      case 5:
+        promptgenPage.style.display = 'none'
+        bingPage.style.display = 'none'
+        midjourneyPage.style.display = 'none'
+        chromeSetupPage.style.display = 'flex'
+        setMainMenuChoice1.checked = false
+        setMainMenuChoice2.checked = false
+        setMainMenuChoice3.checked = false
+        //setMainMenuChoice4.checked = false
+        setMainMenuChoice5.checked = true
+        break;
     default:
       console.log("fail")
       promptgenPage.style.display = 'none'
       bingPage.style.display = 'none'
       midjourneyPage.style.display = 'none'
+      chromeSetupPage.style.display = 'flex'
       setMainMenuChoice1.checked = false
       setMainMenuChoice2.checked = false
       setMainMenuChoice3.checked = false
-      setMainMenuChoice4.checked = true
+      //setMainMenuChoice4.checked = true
+      setMainMenuChoice5.checked = true
       break;
   }
 }
@@ -223,11 +248,28 @@ setMainMenuChoice2.addEventListener('click', () => {
 setMainMenuChoice3.addEventListener('click', () => {
   window.electronAPI.mainmenuChoice(3);
 })
-setMainMenuChoice4.addEventListener('click', () => {
-  window.electronAPI.mainmenuChoice(4);
+// setMainMenuChoice4.addEventListener('click', () => {
+//   window.electronAPI.mainmenuChoice(4);
+// })
+setMainMenuChoice5.addEventListener('click', () => {
+  window.electronAPI.mainmenuChoice(5);
 })
 helpbutton.addEventListener('click', () => {
   window.electronAPI.help();
+})
+
+// Chrome setup page
+chromepathButton.addEventListener('click', () => {
+  window.electronAPI.chromepathSet().then(res => {
+    if (res) {
+      chromepathText.innerHTML = res
+    }
+  })
+})
+
+window.electronAPI.chromepathLoaded((e,val) => {
+  chromepathText.innerHTML = val
+  SetPageVisibility(5)
 })
 
 // Prompt page

@@ -18,7 +18,7 @@ const electron = require('electron');
 const child_process = require('child_process');
 
 const RESOURCES_PATH = app.isPackaged
-? path.join(process.resourcesPath, 'assets')
+? path.join(process.resourcesPath, '/app/assets')
 : path.join(__dirname, '/assets');
 let settings = null;
 let settingspath = path.join(RESOURCES_PATH, '/settings/settings.json')
@@ -53,19 +53,6 @@ if (isDebug) {
   require('electron-debug')();
 }
 
-const installExtensions = async () => {
-  const installer = require('electron-devtools-installer');
-  const forceDownload = !!process.env.UPGRADE_EXTENSIONS;
-  const extensions = ['REACT_DEVELOPER_TOOLS'];
-
-  return installer
-    .default(
-      extensions.map((name) => installer[name]),
-      forceDownload,
-    )
-    .catch(console.log);
-};
-
 const createWindow = async () => {
   const settingsfile = fs.readFileSync(settingspath);
   if (settingsfile) 
@@ -80,6 +67,8 @@ const createWindow = async () => {
   const getAssetPath = (...paths) => {
     return path.join(RESOURCES_PATH, ...paths);
   };
+
+  console.log(path.join(__dirname, 'resources/app/preload.js'))
   mainWindow = new BrowserWindow({
     show: false,
     width: 1000,
@@ -92,10 +81,9 @@ const createWindow = async () => {
       contextIsolation: true,
       devTools: true,
       webSecurity: false,
-      preload: path.join(__dirname, 'preload.js'),
-      // preload: app.isPackaged
-      //   ? path.join(__dirname, 'preload.js')
-      //   : path.join(__dirname, '../../.erb/dll/preload.js'),
+      preload: app.isPackaged
+        ? path.join(__dirname, 'preload.js')
+        : path.join(__dirname, 'preload.js'),
     },
   });
 
@@ -165,12 +153,17 @@ app
           mainWindow.webContents.send('bing-loaded', GetBingData());
         case 4: 
           break;
+        case 5:
+          mainWindow.webContents.send('chromepage-loaded', settings.chromepath)
+          break;
       }   
     });
 
-    ipcMain.handle('dialog:openDirectory', async () => {
+    ipcMain.handle('chromepath-set', async () => {
       const { canceled, filePaths } = await dialog.showOpenDialog(mainWindow, {
-        properties: ['openDirectory']
+        properties: ['openFile'],
+        title: 'Select chrome.exe',
+        filters: [{name:"Exe files", extensions: ["exe"]}]
       });
       if (canceled) {
         return;
@@ -348,6 +341,9 @@ ipcMain.on('login', () => {
     case 3:
       mainWindow.webContents.send('bing-loaded', GetBingData());
     case 4: 
+      break;
+    case 5:
+      mainWindow.webContents.send('chromepage-loaded', settings.chromepath)
       break;
   }    
  });

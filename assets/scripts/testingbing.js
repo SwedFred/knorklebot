@@ -8,7 +8,8 @@ const fs = require('fs');
 const path = require('path')
 var driverpath = require('chromedriver').path;
 
-const RESOURCES_PATH = path.join(__dirname, '../../assets/settings');
+console.log(__dirname)
+const RESOURCES_PATH = path.join(__dirname, '../settings');
 let settingspath = path.join(RESOURCES_PATH, "settings.json")
 let driver;
 let settingsfile = fs.readFileSync(settingspath)
@@ -209,7 +210,7 @@ const UpdateResults = (results, resultType) => {
  
     before(async function () {
       try {
-        const chromePath = path.join('C:\\chrome\\chrome.exe');
+        const chromePath = settings.chromepath;
         const options = new chrome.Options();
         options.setChromeBinaryPath(chromePath);
         driver = await new Builder()

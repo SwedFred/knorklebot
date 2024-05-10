@@ -3,6 +3,8 @@ contextBridge.exposeInMainWorld('electronAPI', {
     login: () => ipcRenderer.send('login'),
     mainmenuChoice: (val) => ipcRenderer.send('change-page', val),
     help: () => ipcRenderer.send('help'),
+    chromepathSet: (callback) => ipcRenderer.invoke('chromepath-set',callback),
+    chromepathLoaded: (val) => ipcRenderer.on('chromepage-loaded', val),
     promptgenLoaded: (callback) => ipcRenderer.on('promptgen-loaded',callback),
     promptgenMenuChoice: (val) => ipcRenderer.send('promptgen-tab-selected',val),
     promptgenAddGenFile: () => ipcRenderer.invoke('promptgen-add-keywords-file'),

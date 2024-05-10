@@ -17,7 +17,6 @@
     <p class="reg-text">If you feel like this has improved your life then please send me a message on FB or
       YouTube, Enjoy!</p>
     <button id="loginbutton">LOG IN</button>
-    <p id="errortext" class="reg-text"></p>
   </div>
 
   <!-- Show this once login has been confirmed -->
@@ -38,9 +37,13 @@
           <input type="radio" id="mainmenu-choice3" value='3' name="menu"/>
           <label htmlFor="bing-choice" class="reg-text">Bing</label>
         </div>
-        <div>
+        <!-- <div>
           <input type="radio" id="mainmenu-choice4" value='4' name="menu"/>
           <label htmlFor="gallery-choice" class="reg-text">Gallery</label>
+        </div> -->
+        <div>
+          <input type="radio" id="mainmenu-choice5" value='5' name="menu"/>
+          <label htmlFor="gallery-choice" class="reg-text">Chrome Setup</label>
         </div>
       </div>
       <div class="helpbox">
@@ -365,6 +368,14 @@
           <AnalysisBody />
           <AnalysisSidebar />
         </div> -->
+    </div>
+
+    <div id="chromesetuppage" class="page">
+      <p class="nm reg-text">Click on the button to look for the chrome.exe file</p>
+      <div class="container2">
+        <button id="chromepath-button">SELECT</button>
+        <p id="chromepage-text"></p>
+      </div>
     </div>
 </div>
 <!-- END OF ANALYSIS -->
