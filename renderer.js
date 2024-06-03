@@ -297,6 +297,8 @@ window.electronAPI.promptgenLoaded((e, data) => {
     promptgenShouldSaveGenFile1.checked = data.cache;
     promptgenShouldSaveGenFile2.checked = data.cache;
     promptgenPromptCount.value = data.generations
+    
+    promptgenFiles.replaceChildren()
     for (var i = 0; i < data.genfiles.length; i++) {
       AddListItem(data.genfiles[i])
     }
@@ -349,11 +351,12 @@ midjourneyTab4.addEventListener('click', () => {
 promptgenAddFileButton.addEventListener('click', () => {
   window.electronAPI.promptgenAddGenFile().then(result => {
     if (result) {
-      var filelist = document.getElementById('promptgen-filelist')
-      filelist.replaceChildren()
-    }
-    for(var i = 0; i < result.length; i++) {
-      AddListItem(result[i])
+      console.log(result)
+      console.log("end of results")
+      promptgenFiles.replaceChildren()
+      for(var i = 0; i < result.length; i++) {
+        AddListItem(result[i])
+      }
     }
   })
 })
@@ -377,11 +380,12 @@ promptgenShouldSaveGenFile1.addEventListener('click', (e) => {
 promptgenCombinationAddfileButton.addEventListener('click', () => {
   window.electronAPI.promptgenAddCombinationGenFile().then(result => {
     if (result) {
+      console.log("Adding combinaton files")
       var filelist = document.getElementById('promptgen-combination-filelist')
       filelist.replaceChildren()
-    }
-    for(var i = 0; i < result.length; i++) {
-      AddPermutationItem(result[i])
+      for(var i = 0; i < result.length; i++) {
+        AddPermutationItem(result[i])
+      }
     }
   })
 })
@@ -396,20 +400,22 @@ promptgenCombinationOpenFileButton.addEventListener('click', () => {
 })
 window.electronAPI.promptgenLoadCombinationFileList((e, data) => {
     var filelist = document.getElementById('promptgen-combination-filelist')
+    console.log("Loading combination file list")
     filelist.replaceChildren()
     if (data) {
       for(var i = 0; i < data.length; i++) {
-        AddPermutationItem(result[i])
+        AddPermutationItem(data[i])
       }
     }
 })
 
 window.electronAPI.promptgenLoadFileList((e, data) => {
-  var filelist = document.getElementById('promptgen-combination-filelist')
-  filelist.replaceChildren()
+  console.log(data)
+  console.log("loading file list")
+  promptgenFiles.replaceChildren()
   if (data) {
-    for(var i = 0; i < result.length; i++) {
-      AddPermutationItem(result[i])
+    for(var i = 0; i < data.length; i++) {
+      AddListItem(data[i])
     }
   }
 })
@@ -465,7 +471,7 @@ bingStartButton.addEventListener('click', () => {
 // MidJourney
 
 window.electronAPI.midjourneyLoaded((event, data) => {
-  try {
+  try { 
     SetMidJourneyTabVisibility(parseInt(data.selectedtab))
 
     midjourneyEmail.value = data.email;
@@ -569,7 +575,7 @@ midjourneyBlendSavepath.addEventListener('click', (e) => {
 })
 
 midjourneyBlendAspectratio.addEventListener('change', (e) => {
-  window.electronAPI.setMidjourneyBlendAspectrationeyBlendAspectratio(e.target.value)
+  window.electronAPI.setMidjourneyBlendAspectratio(e.target.value)
 })
 midjourneyBlendNumberOfBlends.addEventListener('change', (e) => {
   window.electronAPI.setMidjourneyBlendNumblends(e.target.value)
@@ -660,36 +666,47 @@ toggle between hiding and showing the dropdown content */
 // }
 
 function AddListItem(item) {
-  var split = item.split('\\');
-  var filename = split[split.length - 1];
-  filename = filename.substring(0, filename.lastIndexOf('.'));
-  var container = document.createElement('div')
-  container.classList.add('filelistitem-container')
-  var name = document.createElement('p')
-  name.appendChild(document.createTextNode(filename))
-  name.classList.add('filelistitem-text')
-  var deletebutton = document.createElement('button')
-  deletebutton.classList.add('filelistitem-button')
-  deletebutton.innerHTML = "REMOVE"
-  container.appendChild(name)
-  var filelist = document.getElementById('promptgen-filelist')
-  var listlength = filelist.children.length;
-  deletebutton.dataset.index = listlength;
-  deletebutton.addEventListener('click', (e) => {
-    var index = e.target.getAttribute('data-index')
-    window.electronAPI.removeListFile(item)
-    var filelist = document.getElementById('promptgen-filelist')
-    filelist.removeChild(e.currentTarget.parentElement)
-  })
-  container.appendChild(deletebutton)
-  filelist.appendChild(container)
+  console.log("Adding list item")
+  try {
+    // Get item name
+    var split = item.split('\\');
+    var filename = split[split.length - 1];
+    filename = filename.substring(0, filename.lastIndexOf('.'));
+  
+    // Add item
+    var container = document.createElement('div')
+    container.classList.add('filelistitem-container')
+    var name = document.createElement('p')
+    name.appendChild(document.createTextNode(filename))
+    name.classList.add('filelistitem-text')
+    var deletebutton = document.createElement('button')
+    deletebutton.classList.add('filelistitem-button')
+    deletebutton.innerHTML = "REMOVE"
+    container.appendChild(name)
+    deletebutton.dataset.index = promptgenFiles.children.length;
+    deletebutton.addEventListener('click', (e) => {
+      var index = e.target.getAttribute('data-index')
+      window.electronAPI.removeListFile(item)
+      var filelist = document.getElementById('promptgen-filelist')
+      filelist.removeChild(e.currentTarget.parentElement)
+    })
+    container.appendChild(deletebutton)
+    promptgenFiles.appendChild(container)
+
+  } catch(err) { console.log(err)}
 }
 
 
 function AddPermutationItem(item) {
+  // Get item name
   var split = item.split('\\');
   var filename = split[split.length - 1];
   filename = filename.substring(0, filename.lastIndexOf('.'));
+
+  // Check for duplicates
+  var listlength = promptgenCombinationFiles.children.length;
+
+  // Add item
   var container = document.createElement('div')
   container.classList.add('filelistitem-container')
   var name = document.createElement('p')
@@ -699,8 +716,7 @@ function AddPermutationItem(item) {
   deletebutton.classList.add('filelistitem-button')
   deletebutton.innerHTML = "REMOVE"
   container.appendChild(name)
-  var filelist = document.getElementById('promptgen-combination-filelist')
-  var listlength = filelist.children.length;
+
   deletebutton.dataset.index = listlength;
   deletebutton.addEventListener('click', (e) => {
     var index = e.target.getAttribute('data-index')
@@ -709,5 +725,5 @@ function AddPermutationItem(item) {
     filelist.removeChild(e.currentTarget.parentElement)
   })
   container.appendChild(deletebutton)
-  filelist.appendChild(container)
+  promptgenCombinationFiles.appendChild(container)
 }

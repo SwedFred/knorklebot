@@ -279,6 +279,14 @@ ipcMain.handle('promptgen-add-keywords-file', async () => {
   if (canceled) {
     return;
   } else {
+    if (settings.promptgen.generation.files) {
+      for(var i = 0; i < settings.promptgen.generation.files.length; i++) {
+        console.log()
+        if (settings.promptgen.generation.files[i] == filePaths[0]) {
+          return;
+        }
+      }
+    }
     settings.promptgen.generation.files.push(filePaths[0]);
     fs.writeFileSync(settingspath,JSON.stringify(settings)); 
     return settings.promptgen.generation.files;
