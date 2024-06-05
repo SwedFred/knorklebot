@@ -77,8 +77,8 @@ const midjourneyDescribeStartbutton = document.getElementById('midjourney-descri
 const midjourneyBlendLoops = document.getElementById('midjourney-blend-loops')
 const midjourneyBlendWaittimeText = document.getElementById('midjourney-blend-waittime-text')
 const midjourneyBlendWaittime = document.getElementById('midjourney-blend-waittime')
-const midjourneyBlendSavepath = document.getElementById('midjourney-blend-savepath')
-const midjourneyBlendSavepathText = document.getElementById('midjourney-blend-savepath-text')
+//const midjourneyBlendSavepath = document.getElementById('midjourney-blend-savepath')
+//const midjourneyBlendSavepathText = document.getElementById('midjourney-blend-savepath-text')
 const midjourneyBlendAspectratio = document.getElementById('midjourney-blend-aspectratio')
 const midjourneyBlendNumberOfBlends = document.getElementById('midjourney-blend-numblends')
 const midjourneyBlendImgPath1 = document.getElementById('midjourney-blend-img1path')
@@ -95,8 +95,8 @@ const midjourneyBlendStartButton = document.getElementById('midjourney-blend-sta
 const midjourneyPromptBox = document.getElementById('midjourney-prompt-promptbox')
 const midjourneyPromptLoadPromptsButton = document.getElementById('midjourney-prompt-loadprompts')
 const midjourneyPromptWaittime = document.getElementById('midjourney-prompt-waittime')
-const midjourneyPromptSavepath = document.getElementById('midjourney-prompt-downloadpath-button')
-const midjourneyPromptSavepathText = document.getElementById('midjourney-prompt-downloadpath-text')
+//const midjourneyPromptSavepath = document.getElementById('midjourney-prompt-downloadpath-button')
+//const midjourneyPromptSavepathText = document.getElementById('midjourney-prompt-downloadpath-text')
 const midjourneyPromptStartButton = document.getElementById('midjourney-prompt-startbutton')
 
 
@@ -494,8 +494,8 @@ window.electronAPI.midjourneyLoaded((event, data) => {
     if (data.blends.waittime) {
       midjourneyBlendWaittimeText.innerHTML = parseInt(data.blends.loops) * data.blends.waittime / 60;
     }
-    if (data.blends.savepath)
-      midjourneyBlendSavepathText.innerHTML = data.blends.savepath.substring(data.blends.savepath.lastIndexOf('\\') + 1)
+    // if (data.blends.savepath)
+    //   midjourneyBlendSavepathText.innerHTML = data.blends.savepath.substring(data.blends.savepath.lastIndexOf('\\') + 1)
     midjourneyBlendAspectratio.value = data.blends.aspect
     midjourneyBlendNumberOfBlends.value = data.blends.blendnum
     if (data.blends.img1source)
@@ -511,8 +511,8 @@ window.electronAPI.midjourneyLoaded((event, data) => {
 
     midjourneyPromptBox.value = data.promptpath
     midjourneyPromptWaittime.value = data.waittime
-    if (data.savepath)
-      midjourneyPromptSavepathText.innerHTML = data.savepath.substring(data.savepath.lastIndexOf('\\') + 1)
+    // if (data.savepath)
+    //   midjourneyPromptSavepathText.innerHTML = data.savepath.substring(data.savepath.lastIndexOf('\\') + 1)
     SetPageVisibility(2);
   } catch (err) { console.log(err) }
 })
@@ -566,13 +566,13 @@ midjourneyBlendWaittime.addEventListener('click', (e) => {
   window.electronAPI.setMidjourneyBlendWaittime(e.target.value)
   midjourneyBlendWaittimeText.value = parseInt(midjourneyBlendLoops.value) * e.target.value / 60;
 })
-midjourneyBlendSavepath.addEventListener('click', (e) => {
-  window.electronAPI.setMidjourneyBlendSavepath().then(res => {
-    if (res) {
-      midjourneyBlendSavepathText.innerHTML = res.substring(res.lastIndexOf('\\') + 1)
-    }
-  })
-})
+// midjourneyBlendSavepath.addEventListener('click', (e) => {
+//   window.electronAPI.setMidjourneyBlendSavepath().then(res => {
+//     if (res) {
+//       midjourneyBlendSavepathText.innerHTML = res.substring(res.lastIndexOf('\\') + 1)
+//     }
+//   })
+// })
 
 midjourneyBlendAspectratio.addEventListener('change', (e) => {
   window.electronAPI.setMidjourneyBlendAspectratio(e.target.value)
@@ -628,13 +628,13 @@ midjourneyPromptLoadPromptsButton.addEventListener('click', (e) => {
 midjourneyPromptWaittime.addEventListener('change', (e) => {
   window.electronAPI.setMidjourneyPromptWaittime(e.target.value)
 })
-midjourneyPromptSavepath.addEventListener('click', (e) => {
-  window.electronAPI.setMidjourneyPromptSavepath().then(res => {
-    console.log(res)
-    if (res)
-      midjourneyPromptSavepathText.innerHTML = res.substring(res.lastIndexOf('\\') + 1)
-  })
-})
+// midjourneyPromptSavepath.addEventListener('click', (e) => {
+//   window.electronAPI.setMidjourneyPromptSavepath().then(res => {
+//     console.log(res)
+//     if (res)
+//       midjourneyPromptSavepathText.innerHTML = res.substring(res.lastIndexOf('\\') + 1)
+//   })
+// })
 
 midjourneyPromptStartButton.addEventListener('click', (e) => {
   window.electronAPI.startMidJourney(1);
@@ -682,6 +682,17 @@ function AddListItem(item) {
     var deletebutton = document.createElement('button')
     deletebutton.classList.add('filelistitem-button')
     deletebutton.innerHTML = "REMOVE"
+    var svgelement = document.createElementNS("http://www.w3.org/2000/svg", 'svg')
+    svgelement.classList.add('filelistitem-button-icon')
+    svgelement.setAttribute("viewBox", "0 0 448 512")
+    svgelement.setAttribute('stroke', 'black');
+    var pathelement = document.createElementNS("http://www.w3.org/2000/svg", 'path')
+    pathelement.setAttribute("d", "M135.2 17.7C140.6 6.8 151.7 0 163.8 0H284.2c12.1 0 23.2 6.8 28.6 17.7L320 32h96c17.7 0 32 14.3 32 32s-14.3 32-32 32H32C14.3 96 0 81.7 0 64S14.3 32 32 32h96l7.2-14.3zM32 128H416V448c0 35.3-28.7 64-64 64H96c-35.3 0-64-28.7-64-64V128zm96 64c-8.8 0-16 7.2-16 16V432c0 8.8 7.2 16 16 16s16-7.2 16-16V208c0-8.8-7.2-16-16-16zm96 0c-8.8 0-16 7.2-16 16V432c0 8.8 7.2 16 16 16s16-7.2 16-16V208c0-8.8-7.2-16-16-16zm96 0c-8.8 0-16 7.2-16 16V432c0 8.8 7.2 16 16 16s16-7.2 16-16V208c0-8.8-7.2-16-16-16z")
+    pathelement.setAttribute('stroke-linecap', 'round');
+    pathelement.setAttribute('stroke-linejoin', 'round');
+    pathelement.setAttribute('stroke-width', '2');
+    svgelement.appendChild(pathelement)
+    deletebutton.appendChild(svgelement)
     container.appendChild(name)
     deletebutton.dataset.index = promptgenFiles.children.length;
     deletebutton.addEventListener('click', (e) => {
@@ -715,8 +726,18 @@ function AddPermutationItem(item) {
   var deletebutton = document.createElement('button')
   deletebutton.classList.add('filelistitem-button')
   deletebutton.innerHTML = "REMOVE"
+  var svgelement = document.createElementNS("http://www.w3.org/2000/svg", 'svg')
+  svgelement.classList.add('filelistitem-button-icon')
+  svgelement.setAttribute("viewBox", "0 0 448 512")
+  svgelement.setAttribute('stroke', 'black');
+  var pathelement = document.createElementNS("http://www.w3.org/2000/svg", 'path')
+  pathelement.setAttribute("d", "M135.2 17.7C140.6 6.8 151.7 0 163.8 0H284.2c12.1 0 23.2 6.8 28.6 17.7L320 32h96c17.7 0 32 14.3 32 32s-14.3 32-32 32H32C14.3 96 0 81.7 0 64S14.3 32 32 32h96l7.2-14.3zM32 128H416V448c0 35.3-28.7 64-64 64H96c-35.3 0-64-28.7-64-64V128zm96 64c-8.8 0-16 7.2-16 16V432c0 8.8 7.2 16 16 16s16-7.2 16-16V208c0-8.8-7.2-16-16-16zm96 0c-8.8 0-16 7.2-16 16V432c0 8.8 7.2 16 16 16s16-7.2 16-16V208c0-8.8-7.2-16-16-16zm96 0c-8.8 0-16 7.2-16 16V432c0 8.8 7.2 16 16 16s16-7.2 16-16V208c0-8.8-7.2-16-16-16z")
+  pathelement.setAttribute('stroke-linecap', 'round');
+  pathelement.setAttribute('stroke-linejoin', 'round');
+  pathelement.setAttribute('stroke-width', '2');
+  svgelement.appendChild(pathelement)
+  deletebutton.appendChild(svgelement)
   container.appendChild(name)
-
   deletebutton.dataset.index = listlength;
   deletebutton.addEventListener('click', (e) => {
     var index = e.target.getAttribute('data-index')

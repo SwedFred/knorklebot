@@ -151,7 +151,6 @@ const WaitUntilComplete = async () => {
             if (idList.length === 0)
                 break;
             await wait(between(5000, 10000))
-            console.log(idList)
             msgs = await FindAllActiveMessages()
 
             // nu gick något åt helvete
@@ -604,6 +603,7 @@ describe('Chrome tests', function () {
                     }
                 }
                 else {
+                    console.log("more than 2 images blend")
                     for (var i = 0; i < settings.midjourney.blends.loops; i++) {
                         try {
                             var isClosed = await isBrowserClosed() // KOLLA OM VI STÄNGT BROWSERN
@@ -614,11 +614,11 @@ describe('Chrome tests', function () {
                             time = (settings.midjourney.blends.waittime * 1000) + (Math.random() * 5000)
                             text_input.sendKeys('/blend:')
                             //Behövs den här koden? JA!
-                            if (i == 0) {
-                                var beb = await driver.wait(until.elementLocated(By.xpath('//*[@id="autocomplete-0"]/div/div/div[2]/div[1]/div[3]')))
-                            }
+                            // if (i == 0) {
+                            //     var beb = await driver.wait(until.elementLocated(By.xpath('//*[@id="autocomplete-0"]/div/div/div[2]/div[1]/div[3]')))
+                            // }
                             text_input.sendKeys(Key.TAB)
-                            var inputbox = '//*[@id="app-mount"]/div[2]/div[1]/div[1]/div/div[2]/div/div/div/div/div[3]/div/main/form/div/div[2]/div[2]/div[2]/div/div/div/span[5]'
+                            var inputbox = '//*[@id="app-mount"]/div[2]/div[1]/div[1]/div/div[2]/div/div/div/div/div[3]/div/main/form/div/div[2]/div[2]/div[2]/div/div/div/span[5]/span'
                             var blendimg1 = '//*[@id="app-mount"]/div[2]/div[1]/div[1]/div/div[2]/div/div/div/div/div[3]/div/main/form/div/div[2]/ul/li[1]/div/div/div/input'
                             var blendimg2 = '//*[@id="app-mount"]/div[2]/div[1]/div[1]/div/div[2]/div/div/div/div/div[3]/div/main/form/div/div[2]/ul/li[2]/div/div/div/input'
                             var blendimg3 = '//*[@id="app-mount"]/div[2]/div[1]/div[1]/div/div[2]/div/div/div/div/div[3]/div/main/form/div/div[2]/ul/li[3]/div/div/div/input'

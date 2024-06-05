@@ -740,6 +740,15 @@ width: 100px;
 .filelistitem-button {
   color: white;
   background-color: red;
+  justify-content: center;
+  align-items: center;
+  display: flex;
+  gap: 0.5rem;
+  font-size: 10px;
+}
+
+.filelistitem-button-icon {
+  height: 16px;
 }
 
 .file-container {

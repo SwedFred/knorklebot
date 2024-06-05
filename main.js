@@ -272,6 +272,7 @@ ipcMain.on('filelistitem-gen-remove', (event,arg) => {
 
 ipcMain.handle('promptgen-add-keywords-file', async () => {
   const { canceled, filePaths } = await dialog.showOpenDialog(mainWindow, {
+    defaultPath: settings.promptgen.keywordspath,
     title: 'Add keywords file',
     properties: ['openFile'],
     filters: [{name:"keyword-files", extensions: ["keywords"]}, {name:"text-files", extensions: ["txt"]},{name:"All files", extensions: ["*"]}]
@@ -287,6 +288,7 @@ ipcMain.handle('promptgen-add-keywords-file', async () => {
         }
       }
     }
+    settings.promptgen.keywordspath = path.dirname(filePaths[0])
     settings.promptgen.generation.files.push(filePaths[0]);
     fs.writeFileSync(settingspath,JSON.stringify(settings)); 
     return settings.promptgen.generation.files;
@@ -295,6 +297,7 @@ ipcMain.handle('promptgen-add-keywords-file', async () => {
 
 ipcMain.handle('promptgen-combination-add-keywords-file', async () => {
   const { canceled, filePaths } = await dialog.showOpenDialog(mainWindow, {
+    defaultPath: settings.promptgen.keywordspath,
     title: 'Add keywords file',
     properties: ['openFile'],
     filters: [{name:"keyword-files", extensions: ["keywords"]}, {name:"text-files", extensions: ["txt"]},{name:"All files", extensions: ["*"]}]
@@ -302,6 +305,7 @@ ipcMain.handle('promptgen-combination-add-keywords-file', async () => {
   if (canceled) {
     return;
   } else {
+    settings.promptgen.keywordspath = path.dirname(filePaths[0])
     settings.promptgen.permutations.files.push(filePaths[0]);
     fs.writeFileSync(settingspath,JSON.stringify(settings)); 
     return settings.promptgen.permutations.files;
@@ -310,6 +314,7 @@ ipcMain.handle('promptgen-combination-add-keywords-file', async () => {
 
 ipcMain.handle('promptgen-load-gen-file', async () => {
   const { canceled, filePaths } = await dialog.showOpenDialog(mainWindow, {
+    defaultPath: settings.promptgen.generationpath,
     title: 'Open prompts file',
     properties: ['openFile'],
     filters: [{name:"Generation files", extensions: ["gen"]}, {name:"text-files", extensions: ["txt"]},{name:"All files", extensions: ["*"]}]
@@ -317,6 +322,8 @@ ipcMain.handle('promptgen-load-gen-file', async () => {
   if (canceled) {
     return "";
   } else {
+    settings.promptgen.generationpath = path.dirname(filePaths[0])
+    fs.writeFileSync(settingspath,JSON.stringify(settings)); 
     var file = fs.readFileSync(filePaths[0], 'utf-8')
     return file;
   }
@@ -324,6 +331,7 @@ ipcMain.handle('promptgen-load-gen-file', async () => {
 
 ipcMain.handle('promptgen-combination-load-gen-file', async () => {
   const { canceled, filePaths } = await dialog.showOpenDialog(mainWindow, {
+    defaultPath: settings.promptgen.generationpath,
     title: 'Open prompts file',
     properties: ['openFile'],
     filters: [{name:"Generation files", extensions: ["gen"]}, {name:"text-files", extensions: ["txt"]},{name:"All files", extensions: ["*"]}]
@@ -332,6 +340,8 @@ ipcMain.handle('promptgen-combination-load-gen-file', async () => {
     console.log(canceled + " FAIL")
     return "";
   } else {
+    settings.promptgen.generationpath = path.dirname(filePaths[0])
+    fs.writeFileSync(settingspath,JSON.stringify(settings)); 
     var file = fs.readFileSync(filePaths[0], 'utf-8')
     return file;
   }
@@ -362,6 +372,7 @@ ipcMain.on('bing-set-password', (event, arg) => { settings.bing.password = arg; 
 ipcMain.on('bing-set-waittime', (event,arg) => {settings.bing.waittime = arg; fs.writeFileSync(settingspath,JSON.stringify(settings))})
 ipcMain.handle('bing-loadprompts', async () => {
   const { canceled, filePaths } = await dialog.showOpenDialog(mainWindow, {
+    defaultPath: path.dirname(settings.bing.promptpath),
     title: 'Open prompts file',
     properties: ['openFile'],
     filters: [{name:"Prompt files", extensions: ["prompts"]}, {name: "All files", extensions: ["*"]}]
@@ -370,7 +381,7 @@ ipcMain.handle('bing-loadprompts', async () => {
     console.log(canceled + " FAIL")
     return "";
   } else {
-    settings.bing.promptpath = filePaths[0]; 
+    settings.bing.promptpath = filePaths[0];
     fs.writeFileSync(settingspath,JSON.stringify(settings));
     var file = fs.readFileSync(filePaths[0], 'utf-8')
     return file;
@@ -378,6 +389,7 @@ ipcMain.handle('bing-loadprompts', async () => {
 });
 ipcMain.handle('bing-set-savepath', async () => {
   const { canceled, filePaths } = await dialog.showOpenDialog(mainWindow, {
+    defaultPath: settings.bing.savepath,
     title: 'Select save directory',
     properties: ['openDirectory']
   });
@@ -399,6 +411,7 @@ ipcMain.on('midjourney-set-waittime', (event,arg) => {settings.midjourney.waitti
 
 ipcMain.handle('midjourney-loadprompts', async () => {
   const { canceled, filePaths } = await dialog.showOpenDialog(mainWindow, {
+    defaultPath: settings.promptgen.outputpath,
     title: 'Open prompts file',
     properties: ['openFile'],
     filters: [{name:"Prompt files", extensions: ["prompts"]}, {name: "All files", extensions: ["*"]}]
@@ -469,6 +482,7 @@ ipcMain.handle('mj-blend-img-set', async (event,val) => {
 
 ipcMain.handle('midjourney-describe-set-sourcepath', async () => {
   const { canceled, filePaths } = await dialog.showOpenDialog(mainWindow, {
+    defaultPath: settings.midjourney.descriptions.sourcepath,
     title: 'Select source directory',
     properties: ['openDirectory']
   });
@@ -483,6 +497,7 @@ ipcMain.handle('midjourney-describe-set-sourcepath', async () => {
 
 ipcMain.handle('midjourney-describe-set-savepath', async () => {
   const { canceled, filePaths } = await dialog.showOpenDialog(mainWindow, {
+    defaultPath: settings.midjourney.descriptions.savepath,
     title: 'Select save directory',
     properties: ['openDirectory']
   });
@@ -588,12 +603,12 @@ ipcMain.on('promptgen-removelistfile', (event,arg) => {
   }
 
   try {
-    const { canceled, filePath } = await dialog.showSaveDialog(mainWindow, {properties: ['createDirectory']})
+    const { canceled, filePath } = await dialog.showSaveDialog(mainWindow, {defaultPath: settings.promptgen.outputpath, properties: ['createDirectory']})
       if (canceled) {
         return;
       } else {
-          var path = AddExtension(filePath,'.prompts')
-          var file = fs.createWriteStream(path);
+          var _path = AddExtension(filePath,'.prompts')
+          var file = fs.createWriteStream(_path);
           file.on('error', function(err) { console.log("Error writing file: " +err)});
           arr.forEach(function(e,i,a) { 
             if(i < a.length-1) 
@@ -603,8 +618,10 @@ ipcMain.on('promptgen-removelistfile', (event,arg) => {
             });
           file.end(); 
 
+          settings.promptgen.outputpath = path.dirname(filePath)
+          fs.writeFileSync(settingspath,JSON.stringify(settings));
           if (settings.promptgen.saveprompt)
-            SavePrompt(path, arg);
+            SavePrompt(_path, arg);
         return;
       }
   }
@@ -680,8 +697,8 @@ ipcMain.on('promptgen-removelistfile', (event,arg) => {
       if (canceled) {
         return
       } else {
-          var path = AddExtension(filePath, '.prompts')
-          var file = fs.createWriteStream(path);
+          var _path = AddExtension(filePath, '.prompts')
+          var file = fs.createWriteStream(_path);
           file.on('error', function(err) { console.log("Error writing file: " +err)});
           arr.forEach(function(e,i,a) { 
             if(i < a.length-1) 
@@ -691,8 +708,11 @@ ipcMain.on('promptgen-removelistfile', (event,arg) => {
             });
           file.end(); 
 
+          settings.promptgen.outputpath = path.dirname(filePath)
+          fs.writeFileSync(settingspath,JSON.stringify(settings));
+
           if (settings.promptgen.saveprompt)
-            SavePrompt(path, arg);
+            SavePrompt(_path, arg);
 
         return
       }
